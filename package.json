@@ -12,11 +12,19 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+<<<<<<< HEAD
     "bcryptjs": "^2.4.3",
+=======
+    "assignment": "file:",
+    "bcryptjs": "^2.4.3",
+    "cookie": "^1.0.1",
+    "cookie-parser": "^1.4.7",
+>>>>>>> 153142e9ea647e26d97051d0fc30b9c96351911b
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "parser": "^0.1.4"
   }
 }
