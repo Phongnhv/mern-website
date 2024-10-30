@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    avatar:{
+      type: String,
+      default: "https://www.shutterstock.com/shutterstock/photos/1760295569/display_1500/stock-vector-profile-picture-avatar-icon-vector-1760295569.jpg"
+    },
   },
   { timestamps: true }
 );

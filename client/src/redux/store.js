@@ -18,6 +18,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
     serializableCheck: false,
   }),
+  devTools: process.env.NODE_ENV !== 'production'
 });
 
 export const persistor = persistStore(store);
