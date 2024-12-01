@@ -10,14 +10,14 @@ import {
   signOutUserStart,
   signOutUserSuccess,
   signOutUserFailure,
-} from "../redux/user/userSlice";
+} from "../../redux/user/userSlice";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from 'firebase/storage';
-import { app } from '../firebase';
+import { app } from '../../firebase';
 import { Link } from "react-router-dom";
 
 export default function Profile() {
@@ -242,7 +242,7 @@ export default function Profile() {
       </p>
 
       {userListings &&
-        userListings.length > 0 &&
+        userListings.length > 0 && !currentUser.isAdmin &&
         <div className="flex flex-col gap-4">
           <h1 className='text-center mt-7 text-2xl font-semibold'>Your Listings</h1>
           {userListings.map((listing) => (

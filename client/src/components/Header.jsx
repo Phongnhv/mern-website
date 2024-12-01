@@ -57,7 +57,7 @@ export default function Header() {
               About
             </li>
           </Link>
-          <Link to="/profile">
+          <Link to={currentUser && currentUser.isAdmin ? "/admin-profile" : "/profile"}>
             {currentUser ? (
               <img
                 className="rounded-full h-7 w-7 object-cover"
