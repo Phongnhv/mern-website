@@ -57,6 +57,11 @@ export default function Header() {
               About
             </li>
           </Link>
+          {currentUser && currentUser.isAdmin && (
+            <Link to="/admin">
+              <li className="text-slate-700 hover:underline">Admin Dashboard</li>
+            </Link>
+          )}
           <Link to={currentUser && currentUser.isAdmin ? "/admin-profile" : "/profile"}>
             {currentUser ? (
               <img

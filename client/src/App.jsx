@@ -38,7 +38,7 @@ export default function App() {
           />
         </Route>
         <Route element={<AdminRoute />}>
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/*" element={<AdminDashboard />} />
           <Route path="/admin-profile" element={<AdminProfile />} />
         </Route>
       </Routes>
