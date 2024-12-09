@@ -2,6 +2,7 @@ import { errorHandler } from "../utils/errorHandler.js";
 import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
 import Listing from '../models/listing.model.js';
+
 export const test = (req, res) => {
   res.json({
     message: "Hello minh",
@@ -42,6 +43,7 @@ export const deleteUser = async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.clearCookie('access_token');
+    await Listing.deleteMany({ userRef: req.params.id });
     res.status(200).json("user have been deleted");
   } catch (error) {
     next(error);
