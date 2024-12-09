@@ -5,30 +5,23 @@ import { errorHandler } from "../utils/errorHandler.js";
 export const fetchUser = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 5;
+    const limit = parseInt(req.query.limit) || 5;
  
     const skip = (page - 1) * limit;
  
-    const users = await User.find({
-      $or: [
-        { isAdmin: false }, // Trường hợp isAdmin = false
-        { isAdmin: { $exists: false } } // Trường hợp không có trường isAdmin
-    ]
-    })
+    const users = await User.find(
+        { isAdmin: false })
       .skip(skip)
       .limit(limit)
       .select('-password');
    
-    const totalUsers = await User.countDocuments({
-      $or: [
-        { isAdmin: false }, // Trường hợp isAdmin = false
-        { isAdmin: { $exists: false } } // Trường hợp không có trường isAdmin
-     ]
-     });
+    const totalUsers = await User.countDocuments(
+        { isAdmin: false }// Trường hợp isAdmin = false
+        );
  
     res.status(200).json({users, totalUsers});
   } catch (error) {
-    errorHandler(error);
+    next(error);
   }
 };// code như get Listings giống trong listing.route.js nhưng thêm param page và skip đến số page đấy
 //limit = 5
@@ -92,9 +85,9 @@ export const deleteUser = async (req, res, next) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return next(errorHandler(404, "User not found"));
     }
-    return res.status(200).json({ message: "User deleted" });
+    return res.status(200).json("User deleted");
   } catch (error) {
     next(error);
   }
@@ -109,9 +102,9 @@ export const deleteListing = async (req, res, next) => {
     //add isDeleted to listing model and update later
     const listing = await Listing.findByIdAndDelete(req.params.id);
     if (!listing) {
-      return res.status(404).json({ message: "Listing not found" });
+      return next(errorHandler(404, "Listing not found"));
     }
-    return res.status(200).json({ message: "Listing deleted" });
+    return res.status(200).json("Listing deleted");
   } catch (error) {
     next(error);
   }
@@ -119,5 +112,37 @@ export const deleteListing = async (req, res, next) => {
  
 export const banUser = async (req, res, next) => {
   //add isBanned to usermodel and update later
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, { isBanned: true });
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+    return res.status(200).json("User banned");
+  } catch (error) {
+    next(error);
+  }
 }
- 
+
+export const updateUserIsAdminfield = async () => {
+  try {
+    const result = await User.updateMany(
+      { isAdmin: { $exists: false } },
+      { $set: { isAdmin: false } }
+    );
+    console.log(`${result.nModified} documents were updated.`);
+  } catch (err) {
+    console.error('Error updating documents:', err);
+  }
+}
+
+export const updateUserIsBannedfield = async () => {
+  try {
+    const result = await User.updateMany(
+      { isBanned: { $exists: false } },
+      { $set: { isBanned: false } }
+    );
+    console.log(`${result.nModified} documents were updated.`);
+  } catch (err) {
+    console.error('Error updating documents:', err);
+  }
+}
