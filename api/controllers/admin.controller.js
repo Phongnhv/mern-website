@@ -93,11 +93,20 @@ export const deleteUser = async (req, res, next) => {
   }
 }
  
-export const constMoveToDeleteUser = async (req, res, next) => {
- 
+export const deleteListing = async (req, res, next) => {
+  try {
+    //add isDeleted to listing model and update later
+    const listing = await Listing.findByIdAndUpdate(req.params.id, { isDeleted: true });
+    if (!listing) {
+      return next(errorHandler(404, "Listing not found"));
+    }
+    return res.status(200).json("Listing deleted");
+  } catch (error) {
+    next(error);
+  }
 }
  
-export const deleteListing = async (req, res, next) => {
+export const permanentDeleteListing = async (req, res, next) => {
   try {
     //add isDeleted to listing model and update later
     const listing = await Listing.findByIdAndDelete(req.params.id);
