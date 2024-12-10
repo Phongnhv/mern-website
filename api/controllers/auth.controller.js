@@ -22,7 +22,7 @@ export const signin = async (req, res, next) => {
     const existedUser = await User.findOne({ email });
     if (!existedUser) return next(errorHandler(404, 'Invalid email or password!'));
     const validPassword = bcryptjs.compareSync(password, existedUser.password);
-    if (!validPassword) return next(errorHandler(401, 'Invalid email or password!'));
+    if (!validPassword) return next(errorHandler(401, 'Wrong credentials!'));
     if (existedUser.isAdmin) {
       const token = jwt.sign({ id: existedUser._id }, process.env.JWT_SECRET);
       const { password: pass, ...rest } = existedUser._doc;
