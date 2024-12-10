@@ -8,15 +8,22 @@ export const fetchUser = async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 5;
  
     const skip = (page - 1) * limit;
- 
+
+    const searchTerm = req.query.searchTerm || "";
+    const sort = req.query.sort || "createAt";
+    const order = req.query.order || "desc";
+
     const users = await User.find(
-        { isAdmin: false })
+        { username: { $regex: searchTerm, $options: "i" }, 
+          isAdmin: false })
+      .sort({ [sort]: order })
       .skip(skip)
       .limit(limit)
       .select('-password');
    
     const totalUsers = await User.countDocuments(
-        { isAdmin: false }// Trường hợp isAdmin = false
+        { username: { $regex: searchTerm, $options: "i" },
+          isAdmin: false }// Trường hợp isAdmin = false
         );
  
     res.status(200).json({users, totalUsers});
@@ -55,6 +62,7 @@ export const fetchListing = async (req, res, next) => {
     const searchTerm = req.query.searchTerm || "";
     const sort = req.query.sort || "createAt";
     const order = req.query.order || "desc";
+    const isDeleted = req.query.isDeleted || false;
  
     const totalListing = await Listing.countDocuments({
       name: { $regex: searchTerm, $options: "i" },
@@ -62,6 +70,7 @@ export const fetchListing = async (req, res, next) => {
       furnished,
       parking,
       type,
+      isDeleted
     });
  
     const listings = await Listing.find({
@@ -70,6 +79,7 @@ export const fetchListing = async (req, res, next) => {
       furnished,
       parking,
       type,
+      isDeleted
     })
       .sort({ [sort]: order })
       .limit(limit)
@@ -95,8 +105,8 @@ export const deleteUser = async (req, res, next) => {
  
 export const deleteListing = async (req, res, next) => {
   try {
-    //add isDeleted to listing model and update later
     const listing = await Listing.findByIdAndUpdate(req.params.id, { isDeleted: true });
+    //TODO add getListing if isDeleted = false
     if (!listing) {
       return next(errorHandler(404, "Listing not found"));
     }
@@ -137,6 +147,18 @@ export const updateUserIsAdminfield = async () => {
     const result = await User.updateMany(
       { isAdmin: { $exists: false } },
       { $set: { isAdmin: false } }
+    );
+    console.log(`${result.nModified} documents were updated.`);
+  } catch (err) {
+    console.error('Error updating documents:', err);
+  }
+}
+
+export const updateListingIsDeletedfield = async () => {
+  try {
+    const result = await Listing.updateMany(
+      { isDeleted: { $exists: false } },
+      { $set: { isDeleted: false } }
     );
     console.log(`${result.nModified} documents were updated.`);
   } catch (err) {
