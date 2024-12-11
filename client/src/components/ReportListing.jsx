@@ -23,12 +23,13 @@ export default function ReportListing({ reports, selected, setSelected }) {
             </div>
             <div className="flex gap-2 items-center">
               <span className="w-24">Estate link</span>
-              <span
-                className="rounded border-slate-700 p-1 w-11/12"
+              <a
+                href={report.estateUrl}
+                className="rounded border-slate-700 text-blue-600 p-1 w-11/12 underline "
                 style={{ borderWidth: "1px" }}
               >
                 {report.estateLink}
-              </span>
+              </a>
             </div>
             <div className="flex gap-2">
               <span className="w-24">Report issue</span>

@@ -1,56 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReportListing from "../../components/ReportListing";
 
-const exReports = [
-  {
-    id: 1,
-    username: "Nguyen Van A",
-    estateLink: "Estate 1",
-    reportIssue: "Spam",
-  },
-  {
-    id: 2,
-    username: "Le Thi B",
-    estateLink: "Estate 2",
-    reportIssue: "Harassment",
-  },
-  {
-    id: 3,
-    username: "Tran Van C",
-    estateLink: "Estate 3",
-    reportIssue: "False Information",
-  },
-  {
-    id: 4,
-    username: "Pham Thi D",
-    estateLink: "Estate 4",
-    reportIssue: "Copyright or Legal Issues",
-  },
-  {
-    id: 5,
-    username: "Hoang Van E",
-    estateLink: "Estate 5",
-    reportIssue: "Violence or Dangerous Behavior",
-  },
-  {
-    id: 6,
-    username: "Vu Thi F",
-    estateLink: "Estate 6",
-    reportIssue: "Scam or Fraud",
-  },
-  {
-    id: 7,
-    username: "Do Van G",
-    estateLink: "Estate 7",
-    reportIssue: "Other",
-  },
-];
-
 export default function Report() {
-  const [reports, setReports] = useState(exReports);
+  const [reports, setReports] = useState([]);
   const [selected, setSelected] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  useEffect(() => {
+    fetch("/api/listing/get")
+      .then((response) => response.json())
+      .then((data) => {
+        const defaultReports = data.map((listing) => ({
+          id: listing._id,
+          username: "Nguyễn Văn A",
+          estateLink: listing.name,
+          estateUrl: `/listing/${listing._id}`,
+          reportIssue: "Copyright or Legal Issues",
+        }));
+        setReports(defaultReports);
+      })
+      .catch((error) => console.error("Error fetching listings:", error));
+  }, []);
 
   const totalPages = Math.ceil(reports.length / itemsPerPage);
 
