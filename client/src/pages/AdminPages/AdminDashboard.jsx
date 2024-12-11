@@ -6,6 +6,7 @@ import UserList from "./UserList";
 import EstateList from "./EstateList";
 import AdminProfile from "./AdminProfile";
 import Feedback from "./Feedback";
+import Report from "./Report";
 
 const AdminDashboard = () => {
   return (
@@ -17,6 +18,7 @@ const AdminDashboard = () => {
           <Route path="estate-list" element={<EstateList />} />
           <Route path="admin-profile" element={<AdminProfile />} />
           <Route path="feed-back" element={<Feedback />} />
+          <Route path="re-port" element={<Report />} />
         </Routes>
       </div>
     </div>

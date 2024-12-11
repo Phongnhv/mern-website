@@ -107,9 +107,9 @@ const Sidebar = () => {
         </li>
         <li>
           <Link
-            to="/admin/estate-list"
+            to="/admin/re-port"
             className={`flex py-2 pl-3 rounded-lg ${
-              location.pathname === "/admin/estate-list"
+              location.pathname === "/admin/re-port"
                 ? "bg-gray-700"
                 : "hover:bg-gray-700"
             }`}
