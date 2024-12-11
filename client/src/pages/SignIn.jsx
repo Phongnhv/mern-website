@@ -28,6 +28,11 @@ export default function SignIn() {
         return;
       }
       dispatch(signInSuccess(data));
+      // if (user.isAdmin) {
+      //   navigate("/admin-dashboard");
+      // } else {
+      //   navigate("/");
+      // }
       navigate("/");
     } catch (error) {
       dispatch(signInFailure(error.message));
