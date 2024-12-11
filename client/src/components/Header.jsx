@@ -2,7 +2,7 @@ import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import {  FaHome,FaCog, FaInfoCircle } from 'react-icons/fa';
+import {  FaHome,FaCog, FaInfoCircle, FaSignInAlt } from 'react-icons/fa';
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -80,7 +80,9 @@ export default function Header() {
               )
           ) : (
     // Nếu không có currentUser (chưa đăng nhập), hiển thị "Sign in"
-              <li className="text-slate-700 hover:underline">Sign in</li>
+              <li className="flex items-center gap-x-2 text-slate-700 hover:underline">
+                <FaSignInAlt/> Sign in
+                </li>
               )}
             </Link>
         </ul>

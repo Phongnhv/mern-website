@@ -8,7 +8,7 @@ export default function FeedbackListing({ feedbacks, selected, setSelected }) {
             onClick={() => setSelected(feedback)}
             className={`${
               selected?.id === feedback.id
-                ? "bg-gray-50 shadow-lg"
+                ? "bg-gray-50 shadow-lg ring-2 ring-blue-500"
                 : "bg-gray-100 hover:bg-gray-50 hover:shadow-lg"
             } shadow-md mt-5 rounded p-5 flex flex-col gap-3 cursor-pointer`}
           >
