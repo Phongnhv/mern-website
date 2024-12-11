@@ -1,22 +1,104 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import {  
+  signOutUserStart,
+  signOutUserSuccess,
+  signOutUserFailure,
+} from "../../redux/user/userSlice";
+
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
 const Sidebar = () => {
   const location = useLocation(); // Lấy đường dẫn hiện tại
+  const dispatch = useDispatch();
 
+  const [isOpen, setIsOpen] = useState(false); // State điều khiển việc mở/đóng menu con
+  // Hàm toggle mở/đóng menu con
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart());
+      const res = await fetch("/api/auth/signout");
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message));
+        return;
+      }
+      dispatch(signOutUserSuccess(data));
+    } catch (error) {
+      dispatch(signOutUserFailure(data.message));
+    }
+  };
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
   return (
     <div className="w-1/5 min-h-screen max-h-full bg-gray-800 text-white p-5 flex-col shadow-lg">
       <ul className="space-y-3">
         <li>
           <Link
-            to="/admin/userList"
-            className={`flex py-2 pl-3 rounded-lg ${
-              location.pathname === "/admin/userList"
+            to="/admin" //chỉnh lại đường dẫn
+            className={`font-bold text-lg flex py-2 rounded-lg ${
+              location.pathname === "/admin"
                 ? "bg-gray-700"
                 : "hover:bg-gray-700"
             }`}
           >
-            Users Details
+            Homepage
+          </Link>
+        </li>
+        <li>
+          <button className="font-bold text-lg w-full text-left flex items-center justify-between" onClick={toggleMenu} >
+            Managment
+            {isOpen ? (
+              <FaChevronDown className="mr-0 text-sm" /> // Tam giác quay xuống
+            ) : (
+              <FaChevronRight className="mr-0 text-sm" /> // Tam giác quay phải
+            )}
+          </button>
+        </li>
+        {isOpen && (
+          <ul className="space-y-3">
+            <li>
+            <Link
+              to="/admin/userList"
+              className={`flex py-2 pl-3 rounded-lg ${
+                location.pathname === "/admin/userList"
+                  ? "bg-gray-700"
+                  : "hover:bg-gray-700"
+              }`}
+            >
+              Users Management
+            </Link>
+            </li>
+            <li>
+            <Link
+              to="/admin/estate-list"
+              className={`flex py-2 pl-3 rounded-lg ${
+                location.pathname === "/admin/estate-list"
+                  ? "bg-gray-700"
+                  : "hover:bg-gray-700"
+              }`}
+            >
+              Post Management
+            </Link>
+          </li>
+          </ul>
+          )}
+
+        
+        <li className = "font-bold text-lg">General </li>
+        <li>
+          <Link
+            to="/admin/estate-list"
+            className={`flex py-2 pl-3 rounded-lg ${
+              location.pathname === "/admin/estate-list"
+                ? "bg-gray-700"
+                : "hover:bg-gray-700"
+            }`}
+          >  Feedbacks
           </Link>
         </li>
         <li>
@@ -28,8 +110,26 @@ const Sidebar = () => {
                 : "hover:bg-gray-700"
             }`}
           >
-            Estates Details
+            Reports
           </Link>
+        </li>
+        <li className = "font-bold text-lg">Maintainance </li>
+        <li>
+          <Link
+            to="/admin/admin-profile"
+            className={`flex py-2 pl-3 rounded-lg ${
+              location.pathname === "/admin/admin-profile"
+                ? "bg-gray-700"
+                : "hover:bg-gray-700"
+            }`}
+          >
+            Setting
+          </Link>
+        </li>
+        <li onClick={handleSignOut} className="cursor-pointer flex py-2 pl-3 rounded-lg hover:bg-gray-700">
+          
+          Sign out
+          
         </li>
       </ul>
     </div>

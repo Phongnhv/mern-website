@@ -19,7 +19,10 @@ export default function EstateList() {
   }, [params.listingId]);
 
   
-
+  // chỉ giữ lại name, address, price, user và diện tích (sẽ thêm vào sau) và trạng thái (approved, denied, pending)
+  // đưa phần link trỏ thẳng tới Name
+  // các nút bao gồm xoá, chấp thuận, từ chối
+  // thêm phân trang
   return (
     <div className="flex-auto">
       <h1 className="text-3xl font-semibold border-b text-slate-700">
