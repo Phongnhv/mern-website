@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import {  
+import {
   signOutUserStart,
   signOutUserSuccess,
   signOutUserFailure,
@@ -50,7 +50,10 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <button className="font-bold text-lg w-full text-left flex items-center justify-between" onClick={toggleMenu} >
+          <button
+            className="font-bold text-lg w-full text-left flex items-center justify-between"
+            onClick={toggleMenu}
+          >
             Managment
             {isOpen ? (
               <FaChevronDown className="mr-0 text-sm" /> // Tam giác quay xuống
@@ -62,43 +65,44 @@ const Sidebar = () => {
         {isOpen && (
           <ul className="space-y-3">
             <li>
-            <Link
-              to="/admin/userList"
-              className={`flex py-2 pl-3 rounded-lg ${
-                location.pathname === "/admin/userList"
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              Users Management
-            </Link>
+              <Link
+                to="/admin/userList"
+                className={`flex py-2 pl-3 rounded-lg ${
+                  location.pathname === "/admin/userList"
+                    ? "bg-gray-700"
+                    : "hover:bg-gray-700"
+                }`}
+              >
+                Users Management
+              </Link>
             </li>
             <li>
-            <Link
-              to="/admin/estate-list"
-              className={`flex py-2 pl-3 rounded-lg ${
-                location.pathname === "/admin/estate-list"
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              Post Management
-            </Link>
-          </li>
+              <Link
+                to="/admin/estate-list"
+                className={`flex py-2 pl-3 rounded-lg ${
+                  location.pathname === "/admin/estate-list"
+                    ? "bg-gray-700"
+                    : "hover:bg-gray-700"
+                }`}
+              >
+                Post Management
+              </Link>
+            </li>
           </ul>
-          )}
+        )}
 
-        
-        <li className = "font-bold text-lg">General </li>
+        <li className="font-bold text-lg">General </li>
         <li>
           <Link
-            to="/admin/estate-list"
+            to="/admin/feed-back"
             className={`flex py-2 pl-3 rounded-lg ${
-              location.pathname === "/admin/estate-list"
+              location.pathname === "/admin/feed-back"
                 ? "bg-gray-700"
                 : "hover:bg-gray-700"
             }`}
-          >  Feedbacks
+          >
+            {" "}
+            Feedbacks
           </Link>
         </li>
         <li>
@@ -113,7 +117,7 @@ const Sidebar = () => {
             Reports
           </Link>
         </li>
-        <li className = "font-bold text-lg">Maintainance </li>
+        <li className="font-bold text-lg">Maintainance </li>
         <li>
           <Link
             to="/admin/admin-profile"
@@ -126,10 +130,11 @@ const Sidebar = () => {
             Setting
           </Link>
         </li>
-        <li onClick={handleSignOut} className="cursor-pointer flex py-2 pl-3 rounded-lg hover:bg-gray-700">
-          
+        <li
+          onClick={handleSignOut}
+          className="cursor-pointer flex py-2 pl-3 rounded-lg hover:bg-gray-700"
+        >
           Sign out
-          
         </li>
       </ul>
     </div>
