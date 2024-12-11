@@ -29,7 +29,7 @@ export const fetchUser = async (req, res, next) => {
 
     res.status(200).json({ users, totalUsers });
   } catch (error) {
-    errorHandler(error);
+    next(error);
   }
 }; // code như get Listings giống trong listing.route.js nhưng thêm param page và skip đến số page đấy
 //limit = 5
@@ -99,9 +99,9 @@ export const deleteUser = async (req, res, next) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return next(errorHandler(404, "User not found"));
     }
-    return res.status(200).json({ message: "User deleted" });
+    return res.status(200).json("User deleted");
   } catch (error) {
     next(error);
   }
@@ -111,12 +111,25 @@ export const constMoveToDeleteUser = async (req, res, next) => {};
 
 export const deleteListing = async (req, res, next) => {
   try {
+    const listing = await Listing.findByIdAndUpdate(req.params.id, { isDeleted: true });
+    //TODO add getListing if isDeleted = false
+    if (!listing) {
+      return next(errorHandler(404, "Listing not found"));
+    }
+    return res.status(200).json("Listing deleted");
+  } catch (error) {
+    next(error);
+  }
+}
+ 
+export const permanentDeleteListing = async (req, res, next) => {
+  try {
     //add isDeleted to listing model and update later
     const listing = await Listing.findByIdAndDelete(req.params.id);
     if (!listing) {
-      return res.status(404).json({ message: "Listing not found" });
+      return next(errorHandler(404, "Listing not found"));
     }
-    return res.status(200).json({ message: "Listing deleted" });
+    return res.status(200).json("Listing deleted");
   } catch (error) {
     next(error);
   }
