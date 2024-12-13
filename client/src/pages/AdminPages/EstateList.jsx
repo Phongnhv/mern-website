@@ -8,7 +8,7 @@ export default function EstateList() {
   const [listings, setListings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const postsPerPage = 8;
+  const postsPerPage = 5;
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -35,6 +35,10 @@ export default function EstateList() {
 
   const totalPages = Math.ceil(totalListings / postsPerPage);
 
+  // chỉ giữ lại name, address, price, user và diện tích (sẽ thêm vào sau) và trạng thái (approved, denied, pending)
+  // đưa phần link trỏ thẳng tới Name
+  // các nút bao gồm xoá, chấp thuận, từ chối
+  // thêm phân trang
   return (
     <div className="flex-auto mt-2">
       <div className="px-4 pb-4 flex justify-between">

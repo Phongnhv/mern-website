@@ -2,6 +2,7 @@ import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import {  FaHome,FaCog, FaInfoCircle } from 'react-icons/fa';
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -23,8 +24,8 @@ export default function Header() {
     }
   }, [location.search]);
   return (
-    <header className="bg-slate-200 shadow-md top-0 w-full">
-      <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
+    <header className="bg-slate-200 shadow-md">
+      <div className="flex justify-between items-center max-w-6xl mx-auto p-3 ">
         <Link to="/">
           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
             <span className="text-slate-500">Group35</span>
@@ -46,33 +47,42 @@ export default function Header() {
             <FaSearch className="text-slate-600" />
           </button>
         </form>
-        <ul className="flex gap-4">
+        <ul className="flex gap-4 items-center">
           <Link to="/">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
-              Home
+            <li className="flex items-center gap-x-2 text-slate-700 hover:underline">
+             <FaHome/>Home
             </li>
           </Link>
           <Link to="/about">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
-              About
+            <li className="flex items-center gap-x-2 text-slate-700 hover:underline">
+              <FaInfoCircle/>About
             </li>
           </Link>
           {currentUser && currentUser.isAdmin && (
             <Link to="/admin">
-              <li className="text-slate-700 hover:underline">Admin Dashboard</li>
+              <li className="flex items-center gap-x-2 text-slate-700 hover:underline">
+               <FaCog/> Admin
+              </li>
             </Link>
           )}
           <Link to={currentUser && currentUser.isAdmin ? "/admin/profile" : "/profile"}>
             {currentUser ? (
+              currentUser.isAdmin ? (
+              // Nếu là admin, không hiển thị gì
+              null
+              ) : (
+      // Nếu không phải admin, hiển thị ảnh đại diện
               <img
-                className="rounded-full h-7 w-7 object-cover"
-                src={currentUser.avatar}
-                alt="profile"
+              className="rounded-full h-7 w-7 object-cover"
+              src={currentUser.avatar}
+              alt="profile"
               />
-            ) : (
-              <li className=" text-slate-700 hover:underline"> Sign in</li>
-            )}
-          </Link>
+              )
+          ) : (
+    // Nếu không có currentUser (chưa đăng nhập), hiển thị "Sign in"
+              <li className="text-slate-700 hover:underline">Sign in</li>
+              )}
+            </Link>
         </ul>
       </div>
     </header>

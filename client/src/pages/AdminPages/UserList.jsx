@@ -7,7 +7,7 @@ function UsersList() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const postsPerPage = 8;
+  const postsPerPage = 5;
 
   useEffect(() => {
     const fetchUsers = async () => {

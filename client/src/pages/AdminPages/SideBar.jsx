@@ -6,8 +6,15 @@ import {
   signOutUserStart,
   signOutUserSuccess,
 } from "../../redux/user/userSlice";
-import { MoreVertical, ChevronLast, ChevronFirst } from "lucide-react";
-import { FaBuilding, FaHome, FaSignOutAlt, FaUsers } from "react-icons/fa";
+import { ChevronLast, ChevronFirst } from "lucide-react";
+import { VscFeedback } from "react-icons/vsc";
+import { TbReport } from "react-icons/tb";
+import {
+  FaBuilding,
+  FaHome,
+  FaSignOutAlt,
+  FaUsers,
+} from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
 
 const Sidebar = () => {
@@ -58,7 +65,8 @@ const Sidebar = () => {
 
   return (
     <aside className="h-[90vh]">
-      <nav className="h-[90vh] flex flex-col bg-gray-800 text-white shadow-sm">
+      <nav className=" h-[90vh] flex flex-col bg-gray-800 text-white shadow-sm">
+        {/* Header Section */}
         <div className="p-4 pb-2 flex justify-between items-center">
           <span
             className={`overflow-hidden transition-all ${
@@ -76,36 +84,43 @@ const Sidebar = () => {
           </button>
         </div>
 
+        {/* Sidebar Items */}
         <ul className="flex-1 px-3">
-          <SidebarItem icon={<FaHome />} text="Home" to="/" />
+          <SidebarItem icon={<FaHome />} text="Home" to="/admin" />
           <SidebarItem
             icon={<FaUsers />}
-            text="Users Details"
+            text="Users Management"
             to="/admin/user-list"
           />
           <SidebarItem
             icon={<FaBuilding />}
-            text="Estates Details"
+            text="Post Management"
             to="/admin/estate-list"
           />
           <SidebarItem
+            icon={<VscFeedback />}
+            text="Feedbacks"
+            to="/admin/feed-back"
+          />
+          <SidebarItem icon={<TbReport />} text="Reports" to="/admin/report" />
+          <SidebarItem
             icon={<ImProfile />}
-            text="Profile"
+            text="Setting"
             to="/admin/profile"
           />
           <li
             className="relative flex items-center py-2 px-3 my-1
-            font-medium rounded-md cursor-pointer
-            transition-colors group hover:bg-gray-600  text-gray-300"
+            font-medium rounded-md 
+            transition-colors hover:bg-gray-600 cursor-pointer text-gray-300"
             onClick={handleSignOut}
           >
-            <FaSignOutAlt/>
+            <FaSignOutAlt />
             <span
               className={`overflow-hidden transition-all ${
                 expanded ? "w-52 ml-3" : "w-0"
               }`}
             >
-              <p>Sign Out</p>
+              Sign Out
             </span>
           </li>
         </ul>

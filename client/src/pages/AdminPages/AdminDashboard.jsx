@@ -1,9 +1,12 @@
-import { Routes, Route } from 'react-router-dom';
-import Sidebar from './SideBar';
-import UserList from './UserList';
-import EstateList from './EstateList';
-import AdminProfile from './AdminProfile';
-
+// AdminDashboard.jsx
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Sidebar from "./SideBar";
+import UserList from "./UserList";
+import EstateList from "./EstateList";
+import AdminProfile from "./AdminProfile";
+import Feedback from "./Feedback";
+import Report from "./Report";
 
 const AdminDashboard = () => {
   return (
@@ -14,6 +17,8 @@ const AdminDashboard = () => {
           <Route path="user-list" element={<UserList />} />
           <Route path="estate-list" element={<EstateList />} />
           <Route path="profile" element={<AdminProfile />} />
+          <Route path="feed-back" element={<Feedback />} />
+          <Route path="report" element={<Report />} />
         </Routes>
       </div>
     </div>
