@@ -8,27 +8,45 @@ export default function Report() {
   const itemsPerPage = 5;
 
   useEffect(() => {
-    fetch("/api/listing/get")
+    fetch("/api/admin/getReports")
       .then((response) => response.json())
       .then((data) => {
-        const defaultReports = data.map((listing) => ({
-          id: listing._id,
-          username: "Nguyễn Văn A",
-          estateLink: listing.name,
-          estateUrl: `/listing/${listing._id}`,
-          reportIssue: "Copyright or Legal Issues",
+        console.log("Fetched reports:", data);
+
+        const defaultReports = data.data.map((report) => ({
+          id: report._id,
+          username: report.reportedBy.username,
+          estateLink: report.reportedListing.title,
+          estateUrl: `/listing/${report.reportedListing._id}`,
+          reportIssue: report.content,
         }));
         setReports(defaultReports);
       })
-      .catch((error) => console.error("Error fetching listings:", error));
+      .catch((error) => console.error("Error fetching reports:", error));
   }, []);
 
   const totalPages = Math.ceil(reports.length / itemsPerPage);
 
   const handleDelete = () => {
     if (selected) {
-      setReports(reports.filter((report) => report.id !== selected.id));
-      setSelected(null);
+      console.log("Deleting report with ID:", selected.id);
+
+      fetch(`/api/deleteReport/${selected.id}`, {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Handle success
+          if (data.message === "Xóa report thành công.") {
+            setReports(reports.filter((report) => report.id !== selected.id));
+            setSelected(null);
+          } else {
+            alert("Error deleting report: " + data.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting report:", error);
+        });
     }
   };
 
