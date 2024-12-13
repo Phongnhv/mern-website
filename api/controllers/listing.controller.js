@@ -88,6 +88,7 @@ export const getListings = async (req, res, next) => {
     const searchTerm = req.query.searchTerm || "";
     const sort = req.query.sort || "createAt";
     const order = req.query.order || "desc";
+    const status = req.query.status || "Approved";
 
     const listings = await Listing.find({
       name: { $regex: searchTerm, $options: "i" },
@@ -95,6 +96,7 @@ export const getListings = async (req, res, next) => {
       furnished,
       parking,
       type,
+      status
     })
       .sort({ [sort]: order })
       .limit(limit)

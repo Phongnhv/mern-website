@@ -12,6 +12,7 @@ import {
   FaMapMarkerAlt,
   FaParking,
   FaShare,
+  FaExclamationCircle 
 } from 'react-icons/fa';
 import Contact from '../components/Contact';
 
@@ -138,7 +139,11 @@ export default function Listing() {
               </button>
             )}
             {contact && <Contact listing={listing}/>}
+            <div >
+            <button className="flex items-center rounded-lg hover:bg-red-400 p-3 gap-2 "> <FaExclamationCircle/> Report</button>
+            </div>
           </div>
+          
         </div>
       )}
     </main>

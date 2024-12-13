@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ListingItem from "../components/ListingItem";
+import { set } from "mongoose";
+import locationsData from './locations.json';  // Import JSON directly
 
 export default function Search() {
   const navigate = useNavigate();
@@ -67,12 +69,9 @@ export default function Search() {
   }, [location.search]);
 
   const handleChange = (e) => {
-    if (
-      e.target.id === "all" ||
-      e.target.id === "rent" ||
-      e.target.id === "sale"
-    ) {
-      setSidebardata({ ...sidebardata, type: e.target.id });
+
+    if (e.target.id === "type") {
+      setSidebardata({ ...sidebardata, type: e.target.value });
     }
 
     if (e.target.id === "searchTerm") {
@@ -127,55 +126,80 @@ export default function Search() {
     }
     setListings([...listings, ...data]);
   };
+
+  const [selectedCity, setSelectedCity] = useState("");
+  const [districts, setDistricts] = useState([]);
+
+  const [locations, setLocations] = useState({});
+
+  useEffect(() => {
+    setLocations(locationsData);
+  }, []);
+
+  const handleCityChange = (e) => {
+    const city = e.target.value;
+    setSelectedCity(city);
+    setDistricts(locations[city] || []);
+  };
+
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="p-7  border-b-2 md:border-r-2 md:min-h-screen">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-          <div className="flex items-center gap-2">
-            <label className="whitespace-nowrap font-semibold">
-              Search Term:
-            </label>
+      <div className="p-7  border-b-2 md:border-r-2 md:min-h-screen gap-1">
+        <div className="flex items-center gap-2 font-bold text-lg"> Property Search </div>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="items-center">
             <input
               type="text"
               id="searchTerm"
-              placeholder="Search..."
-              className="border rounded-lg p-3 w-full"
+              placeholder="Keyword..."
+              className="border rounded-lg p-3 w-full focus:border-indigo-500 focus:ring-indigo-500 cursor-auto"
               value={sidebardata.searchTerm}
               onChange={handleChange}
             />
           </div>
-          <div className="flex gap-2 flex-wrap items-center">
-            <label className="font-semibold">Type:</label>
-            <div className="flex gap-2">
-              <input
-                type="checkbox"
-                id="all"
-                className="w-5"
-                onChange={handleChange}
-                checked={sidebardata.type === "all"}
-              />
-              <span>Rent & Sale</span>
-            </div>
-            <div className="flex gap-2">
-              <input
-                type="checkbox"
-                id="rent"
-                className="w-5"
-                onChange={handleChange}
-                checked={sidebardata.type === "rent"}
-              />
-              <span>Rent</span>
-            </div>
-            <div className="flex gap-2">
-              <input
-                type="checkbox"
-                id="sale"
-                className="w-5"
-                onChange={handleChange}
-                checked={sidebardata.type === "sale"}
-              />
-              <span>Sale</span>
-            </div>
+          <select
+              onChange={handleChange}
+              defaultValue={"created_at_desc"}
+              placeholder="Type of property"
+              id="type"
+              className="border rounded-lg p-3 focus:border-indigo-500 focus:ring-indigo-500 cursor-pointer"
+            >
+              <option value="all">Both rent & sale</option>
+              <option value="rent">Rent Only</option>
+              <option value="sale">Sale Only</option>
+          </select>
+
+          
+          <select
+            id="city"
+            value={selectedCity}
+            onChange={handleCityChange}
+            className="border rounded-lg p-3 focus:border-indigo-500 focus:ring-indigo-500 cursor-pointer"
+          >
+            <option value="">City</option>
+            {Object.keys(locations).map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+
+          {/* Select quận/huyện */}
+            <select
+              id="district"
+              disabled={!selectedCity}
+              className={`border rounded-lg p-3 ${
+              selectedCity ? "focus:border-indigo-500 focus:ring-indigo-500" : "bg-gray-100"
+            } cursor-pointer`}>
+          <option value="">District</option>
+            {districts.map((district) => (
+              <option key={district} value={district}>
+                {district}
+              </option>
+           ))}
+          </select>
+
+          <div className=" gap-2 flex-wrap items-center">
             <div className="flex gap-2">
               <input
                 type="checkbox"
@@ -229,6 +253,8 @@ export default function Search() {
           </button>
         </form>
       </div>
+
+
       <div className="flex-1">
         <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
           Listing results:

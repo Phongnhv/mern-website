@@ -32,7 +32,19 @@ export const fetchUser = async (req, res, next) => {
   }
 };// code như get Listings giống trong listing.route.js nhưng thêm param page và skip đến số page đấy
 //limit = 5
- 
+
+export const approveListing = async (req, res, next) => {
+  try {
+    const listing = await Listing.findByIdAndUpdate(req.params.id, { status: 'Approved' });
+    if (!listing) {
+      return next(errorHandler(404, "Listing not found"));
+    }
+    return res.status(200).json("Listing approved");
+  } catch (error) {
+    next(error);
+  }
+}
+
 export const fetchListing = async (req, res, next) => {
   //code như trên nhưng cho user
   try {
@@ -58,6 +70,10 @@ export const fetchListing = async (req, res, next) => {
     if (type === undefined || type === "all") {
       type = { $in: ["sale", "rent"] };
     }
+    let status = req.query.status;
+    if (status === undefined || status === "all") {
+      status = { $in: ["Pending", "Approved", "Rejected"] };
+    }
  
     const searchTerm = req.query.searchTerm || "";
     const sort = req.query.sort || "createAt";
@@ -70,7 +86,8 @@ export const fetchListing = async (req, res, next) => {
       furnished,
       parking,
       type,
-      isDeleted
+      isDeleted,
+      status
     });
  
     const listings = await Listing.find({
@@ -79,7 +96,8 @@ export const fetchListing = async (req, res, next) => {
       furnished,
       parking,
       type,
-      isDeleted
+      isDeleted,
+      status
     })
       .sort({ [sort]: order })
       .limit(limit)
@@ -171,6 +189,18 @@ export const updateUserIsBannedfield = async () => {
     const result = await User.updateMany(
       { isBanned: { $exists: false } },
       { $set: { isBanned: false } }
+    );
+    console.log(`${result.nModified} documents were updated.`);
+  } catch (err) {
+    console.error('Error updating documents:', err);
+  }
+}
+
+export const updateListingStatusField = async () => {
+  try {
+    const result = await Listing.updateMany(
+      { status: { $exists: false } },
+      { $set: { status: 'Approved' } }
     );
     console.log(`${result.nModified} documents were updated.`);
   } catch (err) {

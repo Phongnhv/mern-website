@@ -14,12 +14,14 @@ import AdminRoute from "./components/AdminRoute";
 import AdminDashboard from "./pages/AdminPages/AdminDashboard";
 import PublicRoute from "./components/PublicRoute";
 import AdminProfile from "./pages/AdminPages/AdminProfile";
+import Setting from "./pages/UserPages/Setting";
 
 
 export default function App() {
   return (
     <BrowserRouter>
       <Header />
+      <div className="pt-14 z-30">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route element={<PublicRoute />}>
@@ -30,6 +32,7 @@ export default function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/listing/:listingId" element={<Listing />} />
         <Route element={<PrivateRoute />}>
+          <Route path ='/settings/*' element={<Setting />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-listing" element={<CreateListing />} />
           <Route
@@ -41,6 +44,7 @@ export default function App() {
           <Route path="/admin/*" element={<AdminDashboard />} />
         </Route>
       </Routes>
+      </div>
     </BrowserRouter>
   );
 }

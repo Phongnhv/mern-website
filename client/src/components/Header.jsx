@@ -7,6 +7,12 @@ import {  FaHome,FaCog, FaInfoCircle } from 'react-icons/fa';
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,7 +30,7 @@ export default function Header() {
     }
   }, [location.search]);
   return (
-    <header className="bg-slate-200 shadow-md">
+    <header className="bg-slate-200 shadow-md fixed w-full z-50">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3 ">
         <Link to="/">
           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
@@ -65,7 +71,7 @@ export default function Header() {
               </li>
             </Link>
           )}
-          <Link to={currentUser && currentUser.isAdmin ? "/admin-profile" : "/profile"}>
+          <Link to={currentUser && currentUser.isAdmin ? "/admin-profile" : "/settings"}>
             {currentUser ? (
               currentUser.isAdmin ? (
               // Nếu là admin, không hiển thị gì
@@ -77,6 +83,7 @@ export default function Header() {
               src={currentUser.avatar}
               alt="profile"
               />
+              
               )
           ) : (
     // Nếu không có currentUser (chưa đăng nhập), hiển thị "Sign in"
