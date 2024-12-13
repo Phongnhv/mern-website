@@ -89,12 +89,16 @@ export const getListings = async (req, res, next) => {
     const sort = req.query.sort || "createAt";
     const order = req.query.order || "desc";
 
+    //const minArea = parseInt(req.query.minArea) || 0;
+    //const maxArea = parseInt(req.query.maxArea) || Number.MAX_SAFE_INTEGER;
+
     const listings = await Listing.find({
       name: { $regex: searchTerm, $options: "i" },
       offer,
       furnished,
       parking,
       type,
+      //area: { $gte: minArea, $lte: maxArea }, 
     })
       .sort({ [sort]: order })
       .limit(limit)

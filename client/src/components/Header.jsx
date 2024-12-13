@@ -65,7 +65,7 @@ export default function Header() {
               </li>
             </Link>
           )}
-          <Link to={currentUser && currentUser.isAdmin ? "/admin-profile" : "/profile"}>
+          <Link to={currentUser && currentUser.isAdmin ? "/admin/profile" : "/profile"}>
             {currentUser ? (
               currentUser.isAdmin ? (
               // Nếu là admin, không hiển thị gì

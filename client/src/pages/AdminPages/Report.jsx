@@ -1,78 +1,67 @@
 import { useEffect, useState } from "react";
-import FeedbackListing from "../../components/FeedbackListing";
+import ReportListing from "../../components/ReportListing";
 
-export default function Feedback() {
-  const [feedbacks, setFeedbacks] = useState([]);
+export default function Report() {
+  const [reports, setReports] = useState([]);
   const [selected, setSelected] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const itemsPerPage = 3;
-
-  const API_BASE_URL = "/api/admin";
-
-  const totalPages = Math.ceil(feedbacks.length / itemsPerPage);
-
-  // Hàm gọi API để lấy feedbacks
-  const fetchFeedbacks = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/getFeedBacks`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch feedbacks");
-      }
-      const data = await response.json();
-      console.log(data);
-      setFeedbacks(data.data);
-    } catch (error) {
-      console.error("Error fetching feedbacks:", error);
-    }
-  };
-
-  // Hàm gọi API để xóa feedback
-  const deleteFeedback = async (id) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/deleteFeedBack/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete feedback");
-      }
-      const data = await response.json();
-      console.log(data.message);
-    } catch (error) {
-      console.error("Error deleting feedback:", error);
-    }
-  };
+  const itemsPerPage = 5;
 
   useEffect(() => {
-    fetchFeedbacks();
+    fetch("/api/admin/getReports")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched reports:", data);
+
+        const defaultReports = data.data.map((report) => ({
+          id: report._id,
+          username: report.reportedBy.username,
+          estateLink: report.reportedListing.title,
+          estateUrl: `/listing/${report.reportedListing._id}`,
+          reportIssue: report.content,
+        }));
+        setReports(defaultReports);
+      })
+      .catch((error) => console.error("Error fetching reports:", error));
   }, []);
 
-  const handleDelete = async () => {
+  const totalPages = Math.ceil(reports.length / itemsPerPage);
+
+  const handleDelete = () => {
     if (selected) {
-      try {
-        await deleteFeedback(selected.id);
-        setFeedbacks((prevFeedbacks) =>
-          prevFeedbacks.filter((feedback) => feedback._id !== selected.id)
-        );
-        setSelected(null);
-      } catch (error) {
-        console.error("Failed to delete feedback:", error);
-      }
+      console.log("Deleting report with ID:", selected.id);
+
+      fetch(`/api/deleteReport/${selected.id}`, {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Handle success
+          if (data.message === "Xóa report thành công.") {
+            setReports(reports.filter((report) => report.id !== selected.id));
+            setSelected(null);
+          } else {
+            alert("Error deleting report: " + data.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting report:", error);
+        });
     }
   };
 
-  const currentFeedbacks = feedbacks.slice(
+  const currentReports = reports.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  const hasData = feedbacks.length > 0;
+  const hasData = reports.length > 0;
 
   return (
     <div className="h-full">
       <div className="flex justify-between">
         <h1 className="text-3xl font-semibold border-b text-slate-700">
-          Feedback:
+          Report:
         </h1>
         <button
           className={`${
@@ -85,8 +74,8 @@ export default function Feedback() {
         </button>
       </div>
       <div className="mt-5">
-        <FeedbackListing
-          feedbacks={currentFeedbacks}
+        <ReportListing
+          reports={currentReports}
           selected={selected}
           setSelected={setSelected}
         />
