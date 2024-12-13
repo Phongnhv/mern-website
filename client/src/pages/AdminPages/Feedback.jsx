@@ -1,63 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FeedbackListing from "../../components/FeedbackListing";
 
-const exFeedbacks = [
-  {
-    id: 1,
-    username: "Nguyen Van A",
-    title: "Estate",
-    feedback: "This is a great estate. I really love the service!",
-  },
-  {
-    id: 2,
-    username: "Tran Thi B",
-    title: "Service",
-    feedback: "The service was decent but could use some improvement.",
-  },
-  {
-    id: 3,
-    username: "Le Van C",
-    title: "Support",
-    feedback: "Customer support was very helpful and responsive!",
-  },
-  {
-    id: 4,
-    username: "Nguyen Van C",
-    title: "Support",
-    feedback: "The service was decent but could use some improvement.",
-  },
-  {
-    id: 5,
-    username: "Tran Thi D",
-    title: "Support",
-    feedback: "This is a great estate. I really love the service!",
-  },
-  {
-    id: 6,
-    username: "Le Van E",
-    title: "Support",
-    feedback: "Customer support was very helpful and responsive!",
-  },
-  {
-    id: 7,
-    username: "Nguyen Khanh F",
-    title: "Support",
-    feedback: "The service was decent but could use some improvement.",
-  },
-];
-
 export default function Feedback() {
-  const [feedbacks, setFeedbacks] = useState(exFeedbacks);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [selected, setSelected] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const API_BASE_URL = "http://localhost:3000/api/admin";
 
   const totalPages = Math.ceil(feedbacks.length / itemsPerPage);
 
-  const handleDelete = () => {
+  // Hàm gọi API để lấy feedbacks
+  const fetchFeedbacks = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/getFeedBacks`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch feedbacks");
+      }
+      const data = await response.json();
+      console.log(data);
+      setFeedbacks(data.data);
+    } catch (error) {
+      console.error("Error fetching feedbacks:", error);
+    }
+  };
+
+  // Hàm gọi API để xóa feedback
+  const deleteFeedback = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/deleteFeedBack/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete feedback");
+      }
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {
+      console.error("Error deleting feedback:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeedbacks();
+  }, []);
+
+  const handleDelete = async () => {
     if (selected) {
-      setFeedbacks(feedbacks.filter((feedback) => feedback.id !== selected.id));
-      setSelected(null);
+      try {
+        await deleteFeedback(selected.id);
+        setFeedbacks((prevFeedbacks) =>
+          prevFeedbacks.filter((feedback) => feedback._id !== selected.id)
+        );
+        setSelected(null);
+      } catch (error) {
+        console.error("Failed to delete feedback:", error);
+      }
     }
   };
 
