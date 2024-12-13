@@ -23,7 +23,7 @@ export default function Header() {
     }
   }, [location.search]);
   return (
-    <header className="bg-slate-200 shadow-md">
+    <header className="bg-slate-200 shadow-md top-0 w-full">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
         <Link to="/">
           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
@@ -62,7 +62,7 @@ export default function Header() {
               <li className="text-slate-700 hover:underline">Admin Dashboard</li>
             </Link>
           )}
-          <Link to={currentUser && currentUser.isAdmin ? "/admin-profile" : "/profile"}>
+          <Link to={currentUser && currentUser.isAdmin ? "/admin/profile" : "/profile"}>
             {currentUser ? (
               <img
                 className="rounded-full h-7 w-7 object-cover"

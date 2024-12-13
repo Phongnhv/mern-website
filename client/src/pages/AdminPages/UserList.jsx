@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { FaBan, FaTrash } from "react-icons/fa";
+import { FaBan, FaSearch, FaTrash } from "react-icons/fa";
 
 function UsersList() {
   const [loading, setLoading] = useState(false);
   const [totalUsers, setTotalUsers] = useState(0);
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 10;
+  const [searchTerm, setSearchTerm] = useState("");
+  const postsPerPage = 8;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -27,12 +28,31 @@ function UsersList() {
 
   const totalPages = Math.ceil(totalUsers / postsPerPage);
 
+  const handleSubmit = async () => {};
+
   return (
-    <div className="flex-auto">
-      <h1 className="text-3xl font-semibold border-b text-slate-700">
-        User List
-      </h1>
-      <div className="p-7 gap-4">
+    <div className="flex-auto mt-2 ">
+      <div className="px-4 pb-4 flex justify-between">
+        <h1 className="text-3xl font-semibold border-b text-slate-700">
+          User List
+        </h1>
+        <form
+          onSubmit={handleSubmit}
+          className="bg-slate-200 p-3 rounded-lg flex items-center"
+        >
+          <input
+            type="text"
+            placeholder="Search..."
+            className="bg-transparent focus:outline-none w-24 sm:w-64"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button>
+            <FaSearch className="text-slate-600" />
+          </button>
+        </form>
+      </div>
+      <div className="p-4 gap-2">
         {!loading && users.length === 0 && (
           <p className="text-xl text-slate-700">No user found!</p>
         )}
@@ -43,8 +63,8 @@ function UsersList() {
         )}
         {!loading && users && (
           <div>
-            <table className="table-auto border-collapse border border-gray-300 w-full text-sm text-left">
-              <thead className="bg-gray-100 border-b border-gray-300">
+            <table className="table-auto border-collapse border border-gray-300 w-full text-sm text-left ">
+              <thead className="bg-gray-200 border-b border-gray-300">
                 <tr>
                   <th className="p-2 border border-gray-300 w-7">ID</th>
                   <th className="p-2 border border-gray-300">Username</th>
@@ -79,7 +99,7 @@ function UsersList() {
                           type="button"
                           className="border rounded-lg p-1 border-gray-300"
                         >
-                          <FaTrash className="text-gray-600"/>
+                          <FaTrash className="text-gray-600" />
                         </button>
                       </td>
                     </tr>

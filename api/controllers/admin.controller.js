@@ -5,7 +5,7 @@ import { errorHandler } from "../utils/errorHandler.js";
 export const fetchUser = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 10;
+    const limit = 8;
  
     const skip = (page - 1) * limit;
  
@@ -36,7 +36,7 @@ export const fetchUser = async (req, res, next) => {
 export const fetchListing = async (req, res, next) => {
   //code như trên nhưng cho user
   try {
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 8;
     const page = parseInt(req.query.page) || 1;
     const startIndex = (page - 1) * limit;
     let offer = req.query.offer;

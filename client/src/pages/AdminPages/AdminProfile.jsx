@@ -4,9 +4,6 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
-  deleteUserFailure,
-  deleteUserStart,
-  deleteUserSuccess,
   signOutUserStart,
   signOutUserSuccess,
   signOutUserFailure,
@@ -18,7 +15,7 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage';
 import { app } from '../../firebase';
-import { Link } from "react-router-dom";
+import { FaSignOutAlt, FaTrash } from "react-icons/fa";
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -26,10 +23,7 @@ export default function Profile() {
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [formData, setFormData] = useState({});
-  const [showListingsError, setShowListingsError] = useState(false);
-  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -107,7 +101,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
+    <div className="p-3 w-[30%] mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <input
@@ -165,12 +159,14 @@ export default function Profile() {
       <div className="flex justify-between mt-5">
         <span
           onClick={handleDeleteUser}
-          className="text-red-700 cursor-pointer"
+          className="text-red-700 cursor-pointer flex"
         >
-          Delete account
+          <p>Delete account</p>
+          <FaTrash className="ml-2 translate-y-[25%]" />
         </span>
-        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
-          Sign out
+        <span onClick={handleSignOut} className="text-red-700 cursor-pointer flex">
+          <p>Sign Out</p>
+          <FaSignOutAlt className="ml-2 translate-y-[25%]" />
         </span>
       </div>
     </div>
