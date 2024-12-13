@@ -3,5 +3,5 @@ import { Outlet, Navigate } from "react-router-dom";
 
 export default function PublicRoute() {
   const { currentUser } = useSelector((state) => state.user);
-  return currentUser ? <Navigate to="/profile" /> : <Outlet />;
+  return currentUser ? <Navigate to="/" /> : <Outlet />;
 }

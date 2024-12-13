@@ -8,7 +8,7 @@ import {
   signOutUserFailure,
 } from "../../redux/user/userSlice";
 
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { FaUserCircle, FaTasks , FaShoppingCart ,FaToolbox ,FaSignOutAlt  } from "react-icons/fa";
 
 const UserSidebar = () => {
   const location = useLocation(); // Lấy đường dẫn hiện tại
@@ -36,64 +36,62 @@ const UserSidebar = () => {
   };
 
   return (
-    <div className="w-1/5 min-h-screen max-h-full bg-gray-800 text-white p-5 flex-col shadow-lg h-full fixed">
-      <ul className="space-y-3">
+    <div className="w-1/10 min-h-screen max-h-full bg-gray-800 text-white p-5 flex-col shadow-lg fixed flex ">
+      <ul className="flex flex-col items-center justify-center h-full space-y-3">
         <li>
           <Link
-            to="/admin" //chỉnh lại đường dẫn
-            className={`font-bold text-lg flex py-2 rounded-lg ${
-              location.pathname === "/admin"
+            to="/settings/user-profile" //chỉnh lại đường dẫn
+            className={`font-bold text-lg flex py-3 pl-3 pr-1 rounded-lg ${
+              location.pathname === "/settings/user-profile"
                 ? "bg-gray-700"
                 : "hover:bg-gray-700"
             }`}
           >
-            Profile
+            <FaUserCircle size = "35" className="mr-2" />
           </Link>
         </li>
-        <li>
-          <button className="font-bold text-lg w-full text-left flex items-center justify-between" onClick={toggleMenu} >
-            Post Management
-          </button>
-        </li>
-        <li className = "font-bold text-lg">General </li>
+        
         <li>
           <Link
-            to="/admin/estate-list"
-            className={`flex py-2 pl-3 rounded-lg ${
-              location.pathname === "/admin/estate-list"
-                ? "bg-gray-700"
-                : "hover:bg-gray-700"
-            }`}
-          >  Feedbacks
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/admin/estate-list"
-            className={`flex py-2 pl-3 rounded-lg ${
-              location.pathname === "/admin/estate-list"
+            to="/settings/user-list" //chỉnh lại đường dẫn
+            className={`font-bold text-lg flex py-3 pl-3 pr-1 rounded-lg ${
+              location.pathname === "/settings/user-list"
                 ? "bg-gray-700"
                 : "hover:bg-gray-700"
             }`}
           >
-            Reports
+            <FaTasks size = "35" className="mr-2" />
           </Link>
         </li>
-        <li className = "font-bold text-lg">Maintainance </li>
+
         <li>
           <Link
-            to="/admin/admin-profile"
-            className={`flex py-2 pl-3 rounded-lg ${
-              location.pathname === "/admin/admin-profile"
+            to="/settings/store" //chỉnh lại đường dẫn
+            className={`font-bold text-lg flex py-3 pl-3 pr-1 rounded-lg ${
+              location.pathname === "/settings/store"
                 ? "bg-gray-700"
                 : "hover:bg-gray-700"
             }`}
           >
-            Setting
+            <FaShoppingCart size = "35" className="mr-2" />
           </Link>
         </li>
-        <li onClick={handleSignOut} className="cursor-pointer flex py-2 pl-3 rounded-lg hover:bg-gray-700"> 
-          Sign out
+
+
+        <li>
+          <Link
+            to="/settings/utils" //chỉnh lại đường dẫn
+            className={`font-bold text-lg flex py-3 pl-3 pr-1 rounded-lg ${
+              location.pathname === "/settings/utils"
+                ? "bg-gray-700"
+                : "hover:bg-gray-700"
+            }`}
+          >
+            <FaToolbox size = "35" className="mr-2" />
+          </Link>
+        </li>
+        <li onClick={handleSignOut} className="cursor-pointer flex py-3 pl-3 pr-1 rounded-lg hover:bg-gray-700"> 
+          <FaSignOutAlt size = "35" className="mr-2" />
         </li>
       </ul>
     </div>
