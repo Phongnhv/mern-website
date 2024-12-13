@@ -8,7 +8,7 @@ export default function EstateList() {
   const [listings, setListings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const postsPerPage = 5;
+  const postsPerPage = 8;
 
   useEffect(() => {
     const fetchListings = async () => {
