@@ -47,7 +47,7 @@ export default function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/listing/:listingId" element={<Listing />} />
           <Route element={<PrivateRoute />}>
-            <Route path="/settings" element={<Setting  />} />
+            <Route path="/settings/*" element={<Setting  />} />
             <Route path="/create-listing" element={<CreateListing />} />
             <Route path="/update-listing/:listingId" element={<UpdateListing />} />
           </Route>

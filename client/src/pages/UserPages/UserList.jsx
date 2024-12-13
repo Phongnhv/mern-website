@@ -90,7 +90,7 @@ export default function UserList() {
     }
   };
   return (
-    <div className="mt-20 max-w-full mx-auto  rounded-lg"> {/* Increased padding */}
+    <div className=" max-w-full mx-auto  rounded-lg"> {/* Increased padding */}
       <div>
       <h1 className="text-center text-3xl font-semibold col-span-2 mb-6 mt-6">Your Listings</h1>
       <div className="border-b-2 border-gray-300 w-full mb-6"></div>
