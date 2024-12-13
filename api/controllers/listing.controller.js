@@ -90,6 +90,9 @@ export const getListings = async (req, res, next) => {
     const order = req.query.order || "desc";
     const status = req.query.status || "Approved";
 
+    //const minArea = parseInt(req.query.minArea) || 0;
+    //const maxArea = parseInt(req.query.maxArea) || Number.MAX_SAFE_INTEGER;
+
     const listings = await Listing.find({
       name: { $regex: searchTerm, $options: "i" },
       offer,

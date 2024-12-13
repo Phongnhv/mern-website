@@ -28,12 +28,11 @@ export default function SignIn() {
         return;
       }
       dispatch(signInSuccess(data));
-      // if (user.isAdmin) {
-      //   navigate("/admin-dashboard");
-      // } else {
-      //   navigate("/");
-      // }
-      navigate("/");
+      if (data.user && data.user.isAdmin) {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
@@ -43,7 +42,7 @@ export default function SignIn() {
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
+    <div className="p-3 w-[30%] mx-auto mt-10">
       <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
@@ -60,10 +59,13 @@ export default function SignIn() {
           placeholder="Password"
           onChange={handleChange}
         />
-        <button disabled={loading} className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
-          {loading ? 'Loading...' : 'Sign In' }
+        <button
+          disabled={loading}
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+        >
+          {loading ? "Loading..." : "Sign In"}
         </button>
-        <OAuth/>
+        <OAuth />
       </form>
       <div className="flex gap-2 mt-5">
         <p>Dont have an account?</p>

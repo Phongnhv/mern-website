@@ -1,21 +1,27 @@
-import React from "react";
+import React, { useState, createContext, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import {  
+import { useDispatch } from "react-redux";
+import {
+  signOutUserFailure,
   signOutUserStart,
   signOutUserSuccess,
-  signOutUserFailure,
 } from "../../redux/user/userSlice";
-
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { ChevronLast, ChevronFirst } from "lucide-react";
+import { VscFeedback } from "react-icons/vsc";
+import { TbReport } from "react-icons/tb";
+import {
+  FaBuilding,
+  FaHome,
+  FaSignOutAlt,
+  FaUsers,
+} from "react-icons/fa";
+import { ImProfile } from "react-icons/im";
 
 const Sidebar = () => {
-  const location = useLocation(); // Lấy đường dẫn hiện tại
+  const [expanded, setExpanded] = useState(true);
   const dispatch = useDispatch();
+  const location = useLocation();
 
-  const [isOpen, setIsOpen] = useState(false); // State điều khiển việc mở/đóng menu con
-  // Hàm toggle mở/đóng menu con
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
@@ -27,112 +33,99 @@ const Sidebar = () => {
       }
       dispatch(signOutUserSuccess(data));
     } catch (error) {
-      dispatch(signOutUserFailure(data.message));
+      dispatch(signOutUserFailure(error.message));
     }
   };
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-  return (
-    <div className="w-1/5 min-h-screen max-h-full bg-gray-800 text-white p-5 flex-col shadow-lg">
-      <ul className="space-y-3">
-        <li>
-          <Link
-            to="/admin" //chỉnh lại đường dẫn
-            className={`font-bold text-lg flex py-2 rounded-lg ${
-              location.pathname === "/admin"
-                ? "bg-gray-700"
-                : "hover:bg-gray-700"
-            }`}
-          >
-            Homepage
-          </Link>
-        </li>
-        <li>
-          <button className="font-bold text-lg w-full text-left flex items-center justify-between" onClick={toggleMenu} >
-            Managment
-            {isOpen ? (
-              <FaChevronDown className="mr-0 text-sm" /> // Tam giác quay xuống
-            ) : (
-              <FaChevronRight className="mr-0 text-sm" /> // Tam giác quay phải
-            )}
-          </button>
-        </li>
-        {isOpen && (
-          <ul className="space-y-3">
-            <li>
-            <Link
-              to="/admin/userList"
-              className={`flex py-2 pl-3 rounded-lg ${
-                location.pathname === "/admin/userList"
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              Users Management
-            </Link>
-            </li>
-            <li>
-            <Link
-              to="/admin/estate-list"
-              className={`flex py-2 pl-3 rounded-lg ${
-                location.pathname === "/admin/estate-list"
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-700"
-              }`}
-            >
-              Post Management
-            </Link>
-          </li>
-          </ul>
-          )}
+  const SidebarItem = ({ icon, text, to }) => (
+    <li
+      className={`
+        relative flex items-center py-2 px-3 my-1
+        font-medium rounded-md cursor-pointer
+        transition-colors group
+        ${
+          location.pathname === to
+            ? "bg-gray-700 text-white"
+            : "hover:bg-gray-600 text-gray-300"
+        }
+      `}
+    >
+      <Link to={to} className="flex items-center w-full">
+        {icon}
+        <span
+          className={`overflow-hidden transition-all ${
+            expanded ? "w-52 ml-3" : "w-0"
+          }`}
+        >
+          {text}
+        </span>
+      </Link>
+    </li>
+  );
 
-        
-        <li className = "font-bold text-lg">General </li>
-        <li>
-          <Link
-            to="/admin/estate-list"
-            className={`flex py-2 pl-3 rounded-lg ${
-              location.pathname === "/admin/estate-list"
-                ? "bg-gray-700"
-                : "hover:bg-gray-700"
-            }`}
-          >  Feedbacks
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/admin/estate-list"
-            className={`flex py-2 pl-3 rounded-lg ${
-              location.pathname === "/admin/estate-list"
-                ? "bg-gray-700"
-                : "hover:bg-gray-700"
+  return (
+    <aside className="h-[90vh]">
+      <nav className=" h-[90vh] flex flex-col bg-gray-800 text-white shadow-sm">
+        {/* Header Section */}
+        <div className="p-4 pb-2 flex justify-between items-center">
+          <span
+            className={`overflow-hidden transition-all ${
+              expanded ? "w-52 ml-3" : "w-0"
             }`}
           >
-            Reports
-          </Link>
-        </li>
-        <li className = "font-bold text-lg">Maintainance </li>
-        <li>
-          <Link
-            to="/admin/admin-profile"
-            className={`flex py-2 pl-3 rounded-lg ${
-              location.pathname === "/admin/admin-profile"
-                ? "bg-gray-700"
-                : "hover:bg-gray-700"
-            }`}
+            <span className="text-slate-100 font-bold">Group35</span>
+            <span className="text-slate-300 font-bold">Estate</span>
+          </span>
+          <button
+            onClick={() => setExpanded((curr) => !curr)}
+            className="p-1.5 rounded-lg bg-gray-700 hover:bg-gray-600"
           >
-            Setting
-          </Link>
-        </li>
-        <li onClick={handleSignOut} className="cursor-pointer flex py-2 pl-3 rounded-lg hover:bg-gray-700">
-          
-          Sign out
-          
-        </li>
-      </ul>
-    </div>
+            {expanded ? <ChevronFirst /> : <ChevronLast />}
+          </button>
+        </div>
+
+        {/* Sidebar Items */}
+        <ul className="flex-1 px-3">
+          <SidebarItem icon={<FaHome />} text="Home" to="/admin" />
+          <SidebarItem
+            icon={<FaUsers />}
+            text="Users Management"
+            to="/admin/user-list"
+          />
+          <SidebarItem
+            icon={<FaBuilding />}
+            text="Post Management"
+            to="/admin/estate-list"
+          />
+          <SidebarItem
+            icon={<VscFeedback />}
+            text="Feedbacks"
+            to="/admin/feed-back"
+          />
+          <SidebarItem icon={<TbReport />} text="Reports" to="/admin/report" />
+          <SidebarItem
+            icon={<ImProfile />}
+            text="Setting"
+            to="/admin/profile"
+          />
+          <li
+            className="relative flex items-center py-2 px-3 my-1
+            font-medium rounded-md 
+            transition-colors hover:bg-gray-600 cursor-pointer text-gray-300"
+            onClick={handleSignOut}
+          >
+            <FaSignOutAlt />
+            <span
+              className={`overflow-hidden transition-all ${
+                expanded ? "w-52 ml-3" : "w-0"
+              }`}
+            >
+              Sign Out
+            </span>
+          </li>
+        </ul>
+      </nav>
+    </aside>
   );
 };
 

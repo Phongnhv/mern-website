@@ -48,21 +48,21 @@ export default function Listing() {
   }, [params.listingId]);
 
   return (
-    <main>
+    <main className="mt-10">
       {loading && <p className="text-center my-7 text-2xl">Loading...</p>}
       {error && (
         <p className="text-center my-7 text-2xl">Something went wrong!</p>
       )}
       {listing && !loading && !error && (
-        <div>
+        <div className =  "">
           <Swiper navigation>
             {listing.imageUrls.map((url) => (
               <SwiperSlide key={url}>
                 <div
-                  className="h-[350px]"
+                  className="h-[320px] w-full"
                   style={{
-                    background: `url(${url}) center no-repeat`,
-                    backgroundSize: "cover",
+                    background: `url(${url}) fixed center no-repeat`,
+                    backgroundSize: "auto",
                   }}
                 ></div>
               </SwiperSlide>
@@ -85,7 +85,7 @@ export default function Listing() {
               Link copied!
             </p>
           )}
-          <div className='flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4'>
+          <div className='flex flex-col max-w-4xl mx-auto p-3 my-4 gap-2'>
             <p className='text-2xl font-semibold'>
               {listing.name} - ${' '}
               {listing.offer
@@ -93,7 +93,7 @@ export default function Listing() {
                 : listing.regularPrice.toLocaleString('en-US')}
               {listing.type === 'rent' && ' / month'}
             </p>
-            <p className='flex items-center mt-6 gap-2 text-slate-600  text-sm'>
+            <p className='flex items-center mt-2 gap-2 text-slate-600 text-sm'>
               <FaMapMarkerAlt className='text-green-700' />
               {listing.address}
             </p>
