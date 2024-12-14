@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   getDownloadURL,
   getStorage,
@@ -8,6 +8,7 @@ import {
 import { app } from '../../firebase';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import locationsData from '../locations.json'; 
 
 export default function CreateListing() {
   const { currentUser } = useSelector((state) => state.user);
@@ -31,6 +32,22 @@ export default function CreateListing() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [selectedCity, setSelectedCity] = useState("");
+  const [districts, setDistricts] = useState([]);
+
+  const [locations, setLocations] = useState({});
+
+  useEffect(() => {
+    setLocations(locationsData);
+  }, []);
+
+  const handleCityChange = (e) => {
+    const city = e.target.value;
+    setSelectedCity(city);
+    setDistricts(locations[city] || []);
+  };
+
   console.log(formData);
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -93,11 +110,8 @@ export default function CreateListing() {
   };
 
   const handleChange = (e) => {
-    if (e.target.id === 'sale' || e.target.id === 'rent') {
-      setFormData({
-        ...formData,
-        type: e.target.id,
-      });
+    if (e.target.id === "type") {
+      setFormData({ ...formData, type: e.target.value });
     }
 
     if (
@@ -156,60 +170,63 @@ export default function CreateListing() {
   return (
     <main className='p-3 max-w-4xl mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>
-        Create a Listing
+        Create Your Property
       </h1>
       <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
         <div className='flex flex-col gap-4 flex-1'>
-          <input
-            type='text'
-            placeholder='Name'
-            className='border p-3 rounded-lg'
-            id='name'
-            maxLength='62'
-            minLength='10'
-            required
-            onChange={handleChange}
-            value={formData.name}
-          />
-          <textarea
-            type='text'
-            placeholder='Description'
-            className='border p-3 rounded-lg'
-            id='description'
-            required
-            onChange={handleChange}
-            value={formData.description}
-          />
-          <input
-            type='text'
-            placeholder='Address'
-            className='border p-3 rounded-lg'
-            id='address'
-            required
-            onChange={handleChange}
-            value={formData.address}
-          />
-          <div className='flex gap-6 flex-wrap'>
-            <div className='flex gap-2'>
-              <input
-                type='checkbox'
-                id='sale'
-                className='w-5'
+          <div className = "mx-w-full flex flex-col">
+            <p className='font-semibold pl-2'>Name</p>
+            <input
+              type='text'
+              placeholder='Enter your property name'
+              className='border p-3 rounded-lg'
+              id='name'
+              maxLength='62'
+              minLength='10'
+              required
+              onChange={handleChange}
+              value={formData.name}
+            />
+          </div>
+          <div className='mx-w-full flex flex-col'>
+            <p className='font-semibold pl-2'>Description</p>
+            <textarea
+              type='text'
+              placeholder='Enter Property Description'
+              className='border p-3 rounded-lg'
+              id='description'
+              required
+              onChange={handleChange}
+              value={formData.description}
+            />
+          </div>
+          <div className='mx-w-full flex flex-col'>
+            <p className='font-semibold pl-2'>Address</p>
+            <input
+              type='text'
+              placeholder='Address'
+              className='border p-3 rounded-lg'
+              id='address'
+              required
+              onChange={handleChange}
+              value={formData.address}
+            />
+          </div>
+          <div className='mx-w-full flex flex-col'>
+            <p className='font-semibold pl-2'>Property Options</p>
+            <select
                 onChange={handleChange}
-                checked={formData.type === 'sale'}
-              />
-              <span>Sell</span>
-            </div>
-            <div className='flex gap-2'>
-              <input
-                type='checkbox'
-                id='rent'
-                className='w-5'
-                onChange={handleChange}
-                checked={formData.type === 'rent'}
-              />
-              <span>Rent</span>
-            </div>
+                defaultValue={"created_at_desc"}
+                placeholder="Type of property"
+                id="type"
+                className="border rounded-lg p-3 focus:border-indigo-500 focus:ring-indigo-500 cursor-pointer"
+              >
+                <option value="rent">Rent</option>
+                <option value="sale">Sale</option>
+            </select>
+          </div>
+          <div className='flex gap-6 flex-wrap justify-between'>
+            <p className='font-semibold pl-2'>  Additional Options:</p>
             <div className='flex gap-2'>
               <input
                 type='checkbox'
@@ -230,7 +247,7 @@ export default function CreateListing() {
               />
               <span>Furnished</span>
             </div>
-            <div className='flex gap-2'>
+            <div className='flex gap-2 pl-1'>
               <input
                 type='checkbox'
                 id='offer'
@@ -241,7 +258,7 @@ export default function CreateListing() {
               <span>Offer</span>
             </div>
           </div>
-          <div className='flex flex-wrap gap-6'>
+          <div className='flex flex-wrap gap-6 justify-between'>
             <div className='flex items-center gap-2'>
               <input
                 type='number'
@@ -249,7 +266,7 @@ export default function CreateListing() {
                 min='1'
                 max='10'
                 required
-                className='p-3 border border-gray-300 rounded-lg'
+                className='p-3 border border-gray-300 rounded-lg w-30'
                 onChange={handleChange}
                 value={formData.bedrooms}
               />
@@ -262,7 +279,7 @@ export default function CreateListing() {
                 min='1'
                 max='10'
                 required
-                className='p-3 border border-gray-300 rounded-lg'
+                className='p-3 border border-gray-300 rounded-lg w-30'
                 onChange={handleChange}
                 value={formData.bathrooms}
               />

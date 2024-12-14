@@ -9,13 +9,13 @@ import {
 } from 'firebase/storage';
 import { app } from '../../firebase';
 import { Link } from "react-router-dom";
-import { FaMedal, FaRegCreditCard } from "react-icons/fa";
+import { FaPlusCircle, FaRegCreditCard, FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 
 export default function UserList() {
   const fileRef = useRef(null);
-  const { currentUser, loading, error } = useSelector((state) => state.user);
+  const {currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
-
+  
   const [formData, setFormData] = useState({});
   const [showListingsError, setShowListingsError] = useState(false);
   const [userListings, setUserListings] = useState([]);
@@ -90,30 +90,31 @@ export default function UserList() {
     }
   };
   return (
-    <div className=" max-w-full mx-auto  rounded-lg"> {/* Increased padding */}
+    <div className=" max-w-full mx-auto bg-slate-100 shadow-md rounded-lg p-3"> {/* Increased padding */}
       <div>
-      <h1 className="text-center text-3xl font-semibold col-span-2 mb-6 mt-6">Your Listings</h1>
-      <div className="border-b-2 border-gray-300 w-full mb-6"></div>
-      <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-md">
-        <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2">
-          <span className="text-gray-700 text-xl font-medium">
-            {silverCardCount}
-          </span>
-          <FaRegCreditCard className="text-gray-500 text-2xl" />
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-yellow-700 text-xl font-medium">
-            {goldCardCount}
-          </span>
-          <FaRegCreditCard className="text-yellow-500 text-2xl" />
-        </div>
-        </div> 
+        <h1 className="text-center text-3xl font-semibold col-span-2 mb-6 mt-6">Your Property List</h1>
+        <hr className="border-gray-300 my-4" />
+        <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-md">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <span className="text-gray-700 text-xl font-medium">
+                {currentUser.silverCard}
+              </span>
+              <FaRegCreditCard className="text-gray-500 text-2xl" />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-yellow-700 text-xl font-medium">
+                {currentUser.goldCard}
+              </span>
+              <FaRegCreditCard className="text-yellow-500 text-2xl" />
+            </div>
+            <Link to ="/settings/store" className="rounded-lg" > <FaPlusCircle /> </Link>
+          </div> 
         
         
         
         
-        
+    
         <div className="flex items-center gap-4">
         {/* Nút Create */}
         <Link
@@ -122,14 +123,7 @@ export default function UserList() {
         >
           Create
         </Link>
-        {/* Nút Delete */}
-        <button className="bg-red-700 text-white px-4 py-2 rounded-lg uppercase text-center hover:opacity-90 text-sm font-medium">
-          Delete
-        </button>
-        {/* Nút Edit */}
-        <button className="bg-blue-700 text-white px-4 py-2 rounded-lg uppercase text-center hover:opacity-90 text-sm font-medium">
-          Edit
-        </button>
+        
       </div>
       </div>
       <p className="text-red-700 mt-5 text-lg">
@@ -142,32 +136,52 @@ export default function UserList() {
           {userListings.map((listing) => (
             <div
               key={listing._id}
+              onClick = {() => (console.log(listing))}
               className="w-full shadow-slate-500 shadow-md border rounded-lg p-5 flex justify-between items-center gap-6"
             >
-              <Link to={`/listing/${listing._id}`}>
-                <img
-                  src={listing.imageUrls[0]}
-                  alt="listing cover"
-                  className="h-24 w-24 object-contain" 
-                />
-              </Link>
-              <Link
-                className="text-slate-700 font-semibold hover:underline truncate flex-1 text-xl"
-                to={`/listing/${listing._id}`}
-              >
-                <p>{listing.name}</p>
-              </Link>
+              
+                <Link to={`/listing/${listing._id}`}>
+                  <img
+                    src={listing.imageUrls[0]}
+                    alt="listing cover"
+                    className="h-36 w-36 object-contain"
+                  />
+                  </Link>
+                  <div className="flex flex-col items-center justify-center gap-y-2">
+                    <Link
+                      className="text-slate-700 font-semibold hover:underline truncate flex-1 text-xl"
+                      to={`/listing/${listing._id}`}
+                    >
+                      <p className="text-3xl">{listing.name}</p>
+                    </Link>
+                    <d>
+                          Status:{" "}
+                          <span
+                            className={`${
+                              listing.status === "Approved"
+                                ? "text-green-500"
+                                : listing.status === "Pending"
+                                ? "text-yellow-500"
+                                : "text-red-500"
+                            }`}
+                          >
+                            {listing.status}
+                          </span>
+                        </d>
+                  </div>
+           
   
               <div className="flex flex-col items-center gap-3">
                 <button
                   onClick={() => handleListingDelete(listing._id)}
-                  className="text-red-700 uppercase text-lg font-semibold"
+                  className="text-red-700 uppercase text-lg font-semibold flex items-center justify-center"
                 >
-                  Delete
+                  <FaTrash/>  Delete
                 </button>
+
                 <Link to={`/update-listing/${listing._id}`}>
-                  <button className="text-green-700 uppercase text-lg font-semibold">
-                    Edit
+                  <button className="text-green-700 uppercase text-lg font-semibold flex items-center justify-center">
+                    <FaEdit/> Edit
                   </button>
                 </Link>
               </div>

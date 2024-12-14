@@ -40,6 +40,11 @@ export default function Store() {
   const [selectedBundle, setSelectedBundle] = useState(null); // Quản lý bundle được chọn
   const [showPopup, setShowPopup] = useState(false); // Quản lý trạng thái hiển thị popup
 
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString("en-GB");
+  console.log("Hôm nay là: " + formattedDate); // Đúng
+
+
   const handleSelectBundle = (key) => {
     setSelectedBundle(bundle[key]); // Lưu bundle được chọn
     setShowPopup(true); // Hiển thị popup
@@ -118,13 +123,33 @@ return (
     {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg  w-96">
-            <h2 className="text-2xl font-bold mb-4">Confirm Your Payment</h2>
-            {selectedBundle && (
-              <>
-                <p className="text-lg">Selected Bundle: {selectedBundle.description}</p>
-                <p className="text-gray-700 mb-4">Price: ${selectedBundle.price}</p>
-              </>
-            )}
+            <h2 className="text-2xl font-bold ">Confirm Your Payment</h2>
+            <h2 className="text-m  mb-4">Quickly, secure and free transactions</h2>
+            <div className = "bg-slate-200 rounded-lg p-2 mb-4">
+              <h1 className = "font-semibold mb-2"> Details</h1>
+              <div className="flex justify-between">
+                <span className="text-gray-600 font-medium">Date:</span>
+                <span className="text-gray-800">{formattedDate}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 font-medium">Selected Bundle:</span>
+                <span className="text-gray-800">{selectedBundle.description}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 font-medium">Usernam:</span>
+                <span className="text-gray-800">{currentUser.username}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 font-medium">Email:</span>
+                <span className="text-gray-800">{currentUser.email}</span>
+              </div>
+              <hr className="border-gray-300 my-4" />
+              <div className="flex justify-between text-lg font-bold">
+                <span>Total Amount:</span>
+                <span>${selectedBundle.price}</span>
+              </div>
+            </div>
+          
             <div className="flex flex-col items-center gap-2">
             <div className="w-full">
                 <PaypalCheckoutButton product={selectedBundle} closePopup = {closePopup} 
