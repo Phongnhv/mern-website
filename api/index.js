@@ -32,6 +32,8 @@ app.use("/api/user", useRouter);
 app.use("/api/auth", authRouter);
 app.use('/api/listing', listingRouter);
 app.use("/api/admin", adminRouter);
+
+
  
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

@@ -28,6 +28,14 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    silverCard:{
+      type: Number,
+      default: 0
+    },
+    goldCard:{
+      type: Number,
+      default: 0
+    },
   },
   { timestamps: true }
 );

@@ -1,4 +1,5 @@
 import express from "express";
+
 import {
   fetchUser,
   fetchListing,
@@ -9,18 +10,15 @@ import {
   deleteReport,
   deleteFeedBack,
   getListingStatisticsByDate,
-  //updateUserIsAdminfield,
-  //updateUserIsBannedfield,
+  banUser,
+  update
 } from "../controllers/admin.controller.js";
- 
-
 
 const router = express.Router();
 
 router.get("/users", fetchUser);
 router.get("/listings", fetchListing);
-//router.get('/updateUserAdmin', updateUserIsAdminfield)
-//router.get('/updateUserBanned', updateUserIsBannedfield)
+
 router.post("/createAdmin", createAdmin);
 router.get("/getUserStatisticsByDate", getUserStatisticsByDate);
 router.get("/getListingStatisticsByDate",getListingStatisticsByDate)
@@ -28,4 +26,9 @@ router.get("/getReports", getReports);
 router.get("/getFeedBacks", getFeedBacks);
 router.delete("/deleteReport/:id",deleteReport)
 router.delete("/deleteFeedBack/:id", deleteFeedBack);
+
+router.post("/banUser/:id", banUser);
+router.post("/update", update);
+ 
 export default router;
+

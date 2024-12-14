@@ -153,11 +153,15 @@ export const permanentDeleteListing = async (req, res, next) => {
   }
 };
 
-export const updateListingIsDeletedfield = async () => {
+export const update = async () => {
   try {
-    const result = await Listing.updateMany(
-      { isDeleted: { $exists: false } },
-      { $set: { isDeleted: false } }
+    const result = await User.updateMany(
+      { silverCard: { $exists: false } },
+      { $set: { silverCard: 10 } }
+    );
+    const result2 = await User.updateMany(
+      { goldCard: { $exists: false } },
+      { $set: { goldCard: 3 } }
     );
     console.log(`${result.nModified} documents were updated.`);
   } catch (err) {
@@ -167,6 +171,15 @@ export const updateListingIsDeletedfield = async () => {
 
 export const banUser = async (req, res, next) => {
   //add isBanned to usermodel and update later
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, { isBanned: true });
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+    return res.status(200).json("User banned");
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const createAdmin = async (req, res, next) => {
@@ -318,4 +331,6 @@ export const deleteFeedBack = async (req, res) => {
     });
   }
 };
+
+
 
