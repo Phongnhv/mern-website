@@ -5,12 +5,16 @@ export default function Feedback() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [selected, setSelected] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const totalPages = Math.ceil(feedbacks.length / itemsPerPage);
   const itemsPerPage = 3;
+  const currentFeedbacks = feedbacks.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const hasData = feedbacks.length > 0;
 
   const API_BASE_URL = "/api/admin";
-
-  const totalPages = Math.ceil(feedbacks.length / itemsPerPage);
 
   // Hàm gọi API để lấy feedbacks
   const fetchFeedbacks = async () => {
@@ -26,6 +30,10 @@ export default function Feedback() {
       console.error("Error fetching feedbacks:", error);
     }
   };
+
+  useEffect(() => {
+    fetchFeedbacks();
+  }, []);
 
   // Hàm gọi API để xóa feedback
   const deleteFeedback = async (id) => {
@@ -43,16 +51,12 @@ export default function Feedback() {
     }
   };
 
-  useEffect(() => {
-    fetchFeedbacks();
-  }, []);
-
   const handleDelete = async () => {
     if (selected) {
       try {
-        await deleteFeedback(selected.id);
+        await deleteFeedback(selected._id);
         setFeedbacks((prevFeedbacks) =>
-          prevFeedbacks.filter((feedback) => feedback._id !== selected.id)
+          prevFeedbacks.filter((feedback) => feedback._id !== selected._id)
         );
         setSelected(null);
       } catch (error) {
@@ -60,13 +64,6 @@ export default function Feedback() {
       }
     }
   };
-
-  const currentFeedbacks = feedbacks.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const hasData = feedbacks.length > 0;
 
   return (
     <div className="h-full">
