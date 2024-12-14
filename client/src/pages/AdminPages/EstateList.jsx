@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaCheck, FaSearch, FaTrash } from "react-icons/fa";
-import { VscClose } from "react-icons/vsc";
+import { FaSearch, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function EstateList() {
@@ -30,15 +29,21 @@ export default function EstateList() {
     fetchListings();
   }, [currentPage]);
 
+  const handleStatusChange = async () => {};
+
   const handleSubmit = async () => {};
 
   const totalPages = Math.ceil(totalListings / postsPerPage);
 
+  // chỉ giữ lại name, address, price, user và diện tích (sẽ thêm vào sau) và trạng thái (approved, denied, pending)
+  // đưa phần link trỏ thẳng tới Name
+  // các nút bao gồm xoá, chấp thuận, từ chối
+  // thêm phân trang
   return (
     <div className="flex-auto mt-2">
       <div className="px-4 pb-4 flex justify-between">
         <h1 className="text-3xl font-semibold border-b text-slate-700">
-          Listings Results:
+          Listing results:
         </h1>
         <form
           onSubmit={handleSubmit}
@@ -56,7 +61,7 @@ export default function EstateList() {
           </button>
         </form>
       </div>
-      <div className="p-4 gap-2">
+      <div className="px-4 gap-2">
         {!loading && listings.length === 0 && (
           <p className="text-xl text-slate-700">No listing found!</p>
         )}
@@ -72,74 +77,75 @@ export default function EstateList() {
               <thead className="bg-gray-200 border-b border-gray-300">
                 <tr>
                   <th className="p-2 border border-gray-300 w-7">ID</th>
-                  <th className="p-2 border border-gray-300">Name</th>
-                  <th className="p-2 border border-gray-300">
-                    Address
-                  </th>
-                  <th className="p-2 border border-gray-300">Price</th>
-                  <th className="p-2 border border-gray-300">
-                    Landlord's Email
-                  </th>
-                  <th className="p-2 border border-gray-300">Area</th>
-                  <th className="p-2 border border-gray-300">Status</th>
-                  <th className="p-2 border border-gray-300">Action</th>
+                  <th className="p-2 border border-gray-300 text-left">Name</th>
+                  <th className="p-2 border border-gray-300 text-left">Address</th>
+                  <th className="p-2 border border-gray-300 w-7">Type</th>
+                  <th className="p-2 border border-gray-300 w-7">Offer</th>
+                  <th className="p-2 border border-gray-300 w-7">Furnished</th>
+                  <th className="p-2 border border-gray-300 w-7">Parking</th>
+                  <th className="p-2 border border-gray-300 w-7">Status</th>
+                  <th className="p-2 border border-gray-300 w-7">Details</th>
+                  <th className="p-2 border border-gray-300 w-7">Delete</th>
                 </tr>
               </thead>
               <tbody>
                 {listings.map((listing, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                      <td className="p-2 border border-gray-300">
-                        {index + 1 + (currentPage - 1) * postsPerPage}
-                      </td>
-                      <td className="p-2 border border-gray-300">
+                    <td className="p-2 border border-gray-300">
+                      {index + 1 + (currentPage - 1) * postsPerPage}
+                    </td>
+                    <td className="p-2 border border-gray-300 text-left">
+                      {listing.name}
+                    </td>
+                    <td className="p-2 border border-gray-300 text-left">
+                      {listing.address || "N/A"}
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      {listing.type == "rent" ? "Rent" : "Sale"}
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      {listing.offer ? "Yes" : "No"}
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      {listing.furnished ? "Yes" : "No"}
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      {listing.parking ? "Yes" : "No"}
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      <select
+                        value={listing.status}
+                        onChange={(e) =>
+                          handleStatusChange(listing.email, e.target.value)
+                        }
+                        className="border rounded px-2 py-1"
+                        defaultValue={listing.status}
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="accepted" className="text-green-600">
+                          Accepted
+                        </option>
+                        <option value="denied" className="text-red-600">
+                          Denied
+                        </option>
+                      </select>
+                    </td>
+                    <td className="p-2 border border-gray-300">
                       <Link to={`/listing/${listing._id}`}>
-                        {listing.name}
-                        </Link>
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                        {listing.address || "N/A"}
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                        {listing.price}
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                        {listing.email}
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                        {listing.area}
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                        {listing.status ? "Accepted" : "Pending"}
-                      </td>
-                      <td className="border border-gray-300 w-[20%]">
-                        <div className="flex justify-between text-white">
-                          <button
-                            value="Accept"
-                            className="flex border rounded-lg bg-green-600 gap-2 p-1"
-                            onClick={() => {}}
-                          >
-                            Accept
-                            <FaCheck className="translate-y-[25%]" />
-                          </button>
-                          <button
-                            value="Deny"
-                            className="flex border rounded-lg bg-red-600 gap-2 p-1"
-                            onClick={() => {}}
-                          >
-                            Deny
-                            <VscClose className="translate-y-[25%]" />
-                          </button>
-                          <button
-                            value="Delete"
-                            className="flex border rounded-lg bg-gray-600 gap-2 p-1"
-                            onClick={() => {}}
-                          >
-                            Delete
-                            <FaTrash className="translate-y-[25%]" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                        <p className="text-blue-600 hover:opacity-50 underline">
+                          View
+                        </p>
+                      </Link>
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      <button
+                        type="button"
+                        className="border rounded-lg p-1 border-gray-300 "
+                      >
+                        <FaTrash className="text-gray-600 hover:opacity-50" />
+                      </button>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>

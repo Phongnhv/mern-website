@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, createContext, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -7,9 +7,15 @@ import {
   signOutUserSuccess,
 } from "../../redux/user/userSlice";
 import { ChevronLast, ChevronFirst } from "lucide-react";
-import { VscFeedback, VscSettingsGear } from "react-icons/vsc";
+import { VscFeedback } from "react-icons/vsc";
 import { TbReport } from "react-icons/tb";
-import { FaBuilding, FaHome, FaSignOutAlt, FaUsers } from "react-icons/fa";
+import {
+  FaBuilding,
+  FaHome,
+  FaSignOutAlt,
+  FaUsers,
+} from "react-icons/fa";
+import { ImProfile } from "react-icons/im";
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);
@@ -44,7 +50,7 @@ const Sidebar = () => {
         }
       `}
     >
-      <Link to={to} className="flex items-center w-full h-6">
+      <Link to={to} className="flex items-center w-full">
         {icon}
         <span
           className={`overflow-hidden transition-all ${
@@ -62,17 +68,14 @@ const Sidebar = () => {
       <nav className=" h-[90vh] flex flex-col bg-gray-800 text-white shadow-sm">
         {/* Header Section */}
         <div className="p-4 pb-2 flex justify-between items-center">
-          <Link
-            to={"/"}
+          <span
             className={`overflow-hidden transition-all ${
               expanded ? "w-52 ml-3" : "w-0"
             }`}
           >
-            <span>
-              <span className="text-slate-100 font-bold">Group35</span>
-              <span className="text-slate-300 font-bold">Estate</span>
-            </span>
-          </Link>
+            <span className="text-slate-100 font-bold">Group35</span>
+            <span className="text-slate-300 font-bold">Estate</span>
+          </span>
           <button
             onClick={() => setExpanded((curr) => !curr)}
             className="p-1.5 rounded-lg bg-gray-700 hover:bg-gray-600"
@@ -88,7 +91,6 @@ const Sidebar = () => {
             icon={<FaUsers />}
             text="Users Management"
             to="/admin/user-list"
-            className="w-6 h-6"
           />
           <SidebarItem
             icon={<FaBuilding />}
@@ -102,25 +104,23 @@ const Sidebar = () => {
           />
           <SidebarItem icon={<TbReport />} text="Reports" to="/admin/report" />
           <SidebarItem
-            icon={<VscSettingsGear />}
+            icon={<ImProfile />}
             text="Setting"
             to="/admin/profile"
           />
           <li
             className="relative flex items-center py-2 px-3 my-1
-            font-medium rounded-md cursor-pointer
-            transition-colors hover:bg-gray-600 text-gray-300"
+            font-medium rounded-md 
+            transition-colors hover:bg-gray-600 cursor-pointer text-gray-300"
             onClick={handleSignOut}
           >
-            <span className="flex items-center w-full h-6">
-              <FaSignOutAlt />
-              <span
-                className={`overflow-hidden transition-all ${
-                  expanded ? "w-52 ml-3" : "w-0"
-                }`}
-              >
-                Sign Out
-              </span>
+            <FaSignOutAlt />
+            <span
+              className={`overflow-hidden transition-all ${
+                expanded ? "w-52 ml-3" : "w-0"
+              }`}
+            >
+              Sign Out
             </span>
           </li>
         </ul>

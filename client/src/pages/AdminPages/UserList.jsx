@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaSearch, FaTrash, FaUserAltSlash, FaUserCheck } from "react-icons/fa";
+import { FaBan, FaSearch, FaTrash } from "react-icons/fa";
 
 function UsersList() {
   const [loading, setLoading] = useState(false);
@@ -12,9 +12,7 @@ function UsersList() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch(
-          `/api/admin/users?page=${currentPage}&limit=${postsPerPage}`
-        );
+        const res = await fetch(`/api/admin/users?page=${currentPage}`);
         const data = await res.json();
         setUsers(data.users);
         setTotalUsers(data.totalUsers);
@@ -30,13 +28,13 @@ function UsersList() {
 
   const totalPages = Math.ceil(totalUsers / postsPerPage);
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {};
 
   return (
     <div className="flex-auto mt-2 ">
       <div className="px-4 pb-4 flex justify-between">
         <h1 className="text-3xl font-semibold border-b text-slate-700">
-          Users Results:
+          User List
         </h1>
         <form
           onSubmit={handleSubmit}
@@ -65,14 +63,14 @@ function UsersList() {
         )}
         {!loading && users && (
           <div>
-            <table className="table-auto border-collapse border border-gray-300 w-full text-sm text-center ">
+            <table className="table-auto border-collapse border border-gray-300 w-full text-sm text-left ">
               <thead className="bg-gray-200 border-b border-gray-300">
                 <tr>
                   <th className="p-2 border border-gray-300 w-7">ID</th>
                   <th className="p-2 border border-gray-300">Username</th>
                   <th className="p-2 border border-gray-300">Email</th>
-                  <th className="p-2 border border-gray-300">Status</th>
-                  <th className="p-2 border border-gray-300">Actions</th>
+                  <th className="p-2 border border-gray-300 w-7">Ban</th>
+                  <th className="p-2 border border-gray-300 w-7">Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -88,42 +86,21 @@ function UsersList() {
                       <td className="p-2 border border-gray-300">
                         {user.email}
                       </td>
-                      <td className="p-2 border border-gray-300">
-                        {user.status ? "Banned" : "Active"}
+                      <td className="p-2 border border-gray-300 text-center">
+                        <button
+                          type="button"
+                          className="border rounded-lg p-1 border-gray-300  hover:border-red-600 hover:bg-red-300 "
+                        >
+                          <FaBan className="text-red-600 hover:text-white" />
+                        </button>
                       </td>
-                      <td className="border border-gray-300 w-[20%]">
-                        <div className="flex justify-between text-white">
-                          <button
-                            value="Ban"
-                            className="flex border rounded-lg bg-red-600 gap-2 p-1"
-                            onClick={() => {
-                              
-                            }}
-                          >
-                            Ban
-                            <FaUserAltSlash className="translate-y-[25%]" />
-                          </button>
-                          <button
-                            value="Unban"
-                            className="flex border rounded-lg bg-green-600 gap-2 p-1"
-                            onClick={() => {
-                              
-                            }}
-                          >
-                            Unban
-                            <FaUserCheck className="translate-y-[25%]" />
-                          </button>
-                          <button
-                            value="Delete"
-                            className="flex border rounded-lg bg-gray-600 gap-2 p-1"
-                            onClick={() => {
-                              
-                            }}
-                          >
-                            Delete
-                            <FaTrash className="translate-y-[25%]" />
-                          </button>
-                        </div>
+                      <td className="p-2 border border-gray-300 text-center">
+                        <button
+                          type="button"
+                          className="border rounded-lg p-1 border-gray-300"
+                        >
+                          <FaTrash className="text-gray-600" />
+                        </button>
                       </td>
                     </tr>
                   ))
