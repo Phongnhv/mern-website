@@ -36,7 +36,7 @@ const UserSidebar = () => {
   };
 
   return (
-    <div className="w-1/10 min-h-screen max-h-full bg-gray-800 text-white p-5 flex-col shadow-lg fixed flex ">
+    <div className="w-1/10 min-h-screen max-h-full bg-gray-800 text-white p-5 flex-col shadow-lg flex ">
       <ul className="flex flex-col items-center justify-center h-full space-y-3">
         <li>
           <Link

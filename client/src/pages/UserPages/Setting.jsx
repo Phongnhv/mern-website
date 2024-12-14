@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   return (
     <div className="flex">
       <UserSidebar className = "h-full" />
-      <div className="flex-grow p-6 pl-40">
+      <div className="flex-grow p-6 ">
         <Routes>
           <Route path="profile" element={<Profile />} />
           <Route path="user-profile" element={<UserProfile />} />

@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 import Listing from "../models/listing.model.js";
 import FeedBack from "../models/feedback.model.js";
 import Report from "../models/report.model.js";
+import Order from "../models/order.model.js";
 export const test = (req, res) => {
   res.json({
     message: "Hello minh",
@@ -125,3 +126,45 @@ export const createReport = async (req, res, next) => {
     next(error);
   }
 };
+
+export const createOrder = async (req, res, next) => {
+  try {
+    const { userRef, bundle, quantity, price, orderID } = req.body;
+    if (!userRef || !bundle || !quantity || !price || !orderID) {
+      return res.status(400).json({
+        message: "Thiếu thông tin bắt buộc (userRef, bundle, quantity, price).",
+      });
+    }
+
+    const newOrder = await Order.create({
+      userRef,
+      bundle,
+      quantity,
+      price,
+      orderID,
+    });
+
+    if (bundle === "silver") {
+      // Cộng thêm số lượng vào silverCard
+      await User.findByIdAndUpdate(userRef, {
+        $inc: { silverCard: quantity }, // $inc dùng để tăng giá trị
+      });
+      console.log("Updated silverCard");
+    } else if (bundle === "gold") {
+      // Cộng thêm số lượng vào goldCard
+      await User.findByIdAndUpdate(userRef, {
+        $inc: { goldCard: quantity }, // $inc dùng để tăng giá trị
+      });
+      console.log("Updated goldCard");
+    } else {
+      console.log("Invalid bundle type");
+    }
+
+    res.status(201).json({
+      message: "Tạo order thành công.",
+      data: newOrder,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
