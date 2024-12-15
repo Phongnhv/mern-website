@@ -5,8 +5,9 @@ export default function Feedback() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [selected, setSelected] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  
+  const itemsPerPage = 2;
   const totalPages = Math.ceil(feedbacks.length / itemsPerPage);
-  const itemsPerPage = 3;
   const currentFeedbacks = feedbacks.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage

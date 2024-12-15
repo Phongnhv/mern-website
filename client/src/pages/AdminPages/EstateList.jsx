@@ -109,7 +109,7 @@ export default function EstateList() {
                         {listing.area}
                       </td>
                       <td className="p-2 border border-gray-300">
-                        {listing.status ? "Accepted" : "Pending"}
+                        {listing.status}
                       </td>
                       <td className="border border-gray-300 w-[20%]">
                         <div className="flex justify-between text-white">
