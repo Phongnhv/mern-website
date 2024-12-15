@@ -28,12 +28,8 @@ router.delete("/listings/:id/delete", deleteListing);
 router.get("/getFeedBacks", getFeedBacks);
 //router.get('/updateUserAdmin', updateUserIsAdminfield)
 //router.get('/updateUserBanned', updateUserIsBannedfield)
-router.delete("/deleteFeedBack", deleteFeedBack);
 router.delete("/deleteFeedBack/:id", deleteFeedBack);
 router.get("/getReports", getReports);
-router.get("/deleteReport", deleteReport);
-router.get("/deleteReport/:id", deleteReport);
-
-
+router.delete("/deleteReport/:id", deleteReport);
 
 export default router;
