@@ -165,7 +165,7 @@ export const constMoveToDeleteUser = async (req, res, next) => { };
 
 export const deleteListing = async (req, res, next) => {
   try {
-    const listing = await Listing.findByIdAndUpdate(req.params.id, { isDeleted: true });
+    const listing = await Listing.findByIdAndDelete(req.params.id);
     //TODO add getListing if isDeleted = false
     if (!listing) {
       return next(errorHandler(404, "Listing not found"));

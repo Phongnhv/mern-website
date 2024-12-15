@@ -30,8 +30,6 @@ router.get("/getFeedBacks", getFeedBacks);
 //router.get('/updateUserBanned', updateUserIsBannedfield)
 router.delete("/deleteFeedBack/:id", deleteFeedBack);
 router.get("/getReports", getReports);
-router.get("/deleteReport/:id", deleteReport);
-
-
+router.delete("/deleteReport/:id", deleteReport);
 
 export default router;
