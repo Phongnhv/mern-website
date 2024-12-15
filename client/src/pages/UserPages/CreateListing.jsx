@@ -121,6 +121,8 @@ export default function CreateListing() {
         [e.target.id]: e.target.value,
       });
     }
+
+    setFormData(...formData, {status: "Pending"});
   };
 
   const handleSubmit = async (e) => {

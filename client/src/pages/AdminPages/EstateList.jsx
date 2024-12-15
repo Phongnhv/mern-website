@@ -29,9 +29,9 @@ export default function EstateList() {
     fetchListings();
   }, [currentPage]);
 
-  const updateStatus = async (id, status) => { //Mới chỉ cập nhật được trên UI, chưa cập nhật được trong database
+  const updateStatus = async (id, status) => {
     try {
-      const response = await fetch(`/api/admin/listings/${id}/status`, {
+      const response = await fetch(`/api/admin/listings/status/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -40,6 +40,7 @@ export default function EstateList() {
       });
 
       const result = await response.json();
+
       if (result.success) {
         console.log("Update successful:", result.data);
 
@@ -58,14 +59,16 @@ export default function EstateList() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/admin/listings/${id}/del-ete`, { // TODO Sửa sau khi có api
+      const response = await fetch(`/api/admin/listings/delete/${id}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
         console.log("Listing deleted successfully");
-        setListings((prevListings) => prevListings.filter((listing) => listing._id !== id));
-        setTotalListings((prevTotal) => prevTotal - 1); 
+        setListings((prevListings) =>
+          prevListings.filter((listing) => listing._id !== id)
+        );
+        setTotalListings((prevTotal) => prevTotal - 1);
       } else {
         const result = await response.json();
         console.error("Delete failed:", result.message);
@@ -150,11 +153,12 @@ export default function EstateList() {
                       {listing.area}
                     </td>
                     <td className="p-2 border border-gray-300">
-                      {listing.status || "Pending"}
+                      {listing.status}
                     </td>
                     <td className="text-white border border-gray-300">
                       <div className="flex justify-around">
-                        {listing.status !== "Approved" && (
+                        {(listing.status === "Pending" ||
+                          listing.status === "Rejected") && (
                           <button
                             className="flex border rounded-lg bg-green-600 gap-2 p-1 m-1"
                             onClick={() =>
@@ -166,11 +170,12 @@ export default function EstateList() {
                           </button>
                         )}
 
-                        {listing.status !== "Denied" && (
+                        {(listing.status === "Pending" ||
+                          listing.status === "Approved") && (
                           <button
                             className="flex border rounded-lg bg-red-600 gap-2 p-1 m-1"
                             onClick={(e) => {
-                              updateStatus(listing._id, "Denied");
+                              updateStatus(listing._id, "Rejected");
                             }}
                           >
                             Deny
