@@ -13,13 +13,12 @@ import Listing from "./pages/Listing";
 import AdminRoute from "./components/AdminRoute";
 import AdminDashboard from "./pages/AdminPages/AdminDashboard";
 import PublicRoute from "./components/PublicRoute";
+import ReportForm from "./pages/UserPages/ReportForm";
 
 import AdminProfile from "./pages/AdminPages/AdminProfile";
 import Setting from "./pages/UserPages/Setting";
 
 import Footer from "./components/Footer";
-
-
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -40,16 +39,20 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route element={<PublicRoute />}>
-            <Route path="/sign-in" element={<SignIn/>} />
+            <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
           </Route>
           <Route path="/about" element={<About />} />
           <Route path="/search" element={<Search />} />
           <Route path="/listing/:listingId" element={<Listing />} />
           <Route element={<PrivateRoute />}>
-            <Route path="/settings/*" element={<Setting  />} />
+            <Route path="/settings/*" element={<Setting />} />
             <Route path="/create-listing" element={<CreateListing />} />
-            <Route path="/update-listing/:listingId" element={<UpdateListing />} />
+            <Route
+              path="/update-listing/:listingId"
+              element={<UpdateListing />}
+            />
+            <Route path="/report/:listingId" element={<ReportForm />} />
           </Route>
           <Route element={<AdminRoute />}>
             <Route path="/admin/*" element={<AdminDashboard />} />

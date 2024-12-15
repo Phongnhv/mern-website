@@ -65,13 +65,13 @@ export default function Header() {
             </li>
           </Link>
           {currentUser && currentUser.isAdmin && (
-            <Link to="/admin">
+            <Link to="/admin/homepage">
               <li className="flex items-center gap-x-2 text-slate-700 hover:underline">
                <FaCog/> Admin
               </li>
             </Link>
           )}
-          <Link to={currentUser && currentUser.isAdmin ? "/admin-profile" : "/settings"}>
+          <Link to={currentUser && currentUser.isAdmin ? "/admin/profile" : "/settings/user-profile"}>
 
             {currentUser ? (
               currentUser.isAdmin ? (
