@@ -92,27 +92,27 @@ export default function UserProfile() {
           background:
             "linear-gradient(to right,rgb(188, 219, 255),rgb(254, 255, 223))",
         }}
-      >
-        {/* Nội dung */}
-      </div>
-      <div className="flex justify-between pr-14 items-center">
-        <div className="flex flex-col pt-4 ml-44">
-          <h1 className="text-3xl font-semibold">Profile</h1>
-          <span className="text-gray-500">
-            Update your photo and persional details
-          </span>
-        </div>
-        <div className="flex justify-end">
-          <button
-            disabled={loading}
-            className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80"
-          >
-            {" "}
-            {loading ? "Loading..." : "Update"}{" "}
-          </button>
-        </div>
-      </div>
+      ></div>
+
       <form onSubmit={handleSubmit}>
+        <div className="flex justify-between pr-14 items-center">
+          <div className="flex flex-col pt-4 ml-44">
+            <h1 className="text-3xl font-semibold">Profile</h1>
+            <span className="text-gray-500">
+              Update your photo and personal details
+            </span>
+          </div>
+          <div>
+            <button
+              disabled={loading}
+              className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80"
+            >
+              {" "}
+              {loading ? "Loading..." : "Update"}{" "}
+            </button>
+          </div>
+        </div>
+
         <input
           onChange={(e) => setFile(e.target.files[0])}
           type="file"
@@ -129,7 +129,7 @@ export default function UserProfile() {
           />
         </div>
 
-        <p className="text-sm self-center -mt-10">
+        <p className="text-sm -mt-24 ml-12">
           {fileUploadError ? (
             <span className="text-red-700">
               Error Image upload (image must be less than 2 mb)
@@ -137,12 +137,12 @@ export default function UserProfile() {
           ) : filePerc > 0 && filePerc < 100 ? (
             <span className="text-slate-700">{`Uploading ${filePerc}%`}</span>
           ) : filePerc === 100 ? (
-            <span className="text-green-700">Image successfully uploaded!</span>
+            <span className="text-green-700">Image uploaded!</span>
           ) : (
             ""
           )}
         </p>
-        <div className="flex flex-col gap-10 pl-44 pr-14 pb-10">
+        <div className="flex flex-col mt-12 gap-10 pl-44 pr-14 pb-10">
           <div className="flex items-center justify-between">
             <span className="font-semibold">Username</span>
             <input
