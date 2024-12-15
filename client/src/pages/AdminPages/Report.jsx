@@ -5,7 +5,7 @@ export default function Report() {
   const [reports, setReports] = useState([]);
   const [selected, setSelected] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 2;
   const totalPages = Math.ceil(reports.length / itemsPerPage);
   const currentReports = reports.slice(
     (currentPage - 1) * itemsPerPage,

@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 
 export const fetchUser = async (req, res, next) => {
   try {
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit) || 10;
     const page = parseInt(req.query.page) || 1;
 
     const skip = (page - 1) * limit;
@@ -35,23 +35,35 @@ export const fetchUser = async (req, res, next) => {
 }; // code như get Listings giống trong listing.route.js nhưng thêm param page và skip đến số page đấy
 //limit = 5
 
-export const approveListing = async (req, res, next) => {
+export const updateListingStatus = async (req, res) => {
+  
+  const { id } = req.params;
+  const { status } = req.body;
+
   try {
-    const listing = await Listing.findByIdAndUpdate(req.params.id, { status: 'Approved' });
-    if (!listing) {
-      return next(errorHandler(404, "Listing not found"));
+    const updatedListing = await Listing.findByIdAndUpdate(
+      id,
+      { $set: { status: status } },
+      { new: true }
+    );
+
+    if (!updatedListing) {
+      return res.status(404).json({ success: false, message: "Listing not found" });
     }
-    return res.status(200).json("Listing approved");
+
+    return res.json({ success: true, data: updatedListing });
   } catch (error) {
-    next(error);
+    console.error("Error updating status:", error);
+    res.status(500).json({ success: false, message: "Failed to update status" });
   }
-}
+};
+
 
 
 export const fetchListing = async (req, res, next) => {
   //code như trên nhưng cho user
   try {
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit) || 10;
     const page = parseInt(req.query.page) || 1;
     const startIndex = (page - 1) * limit;
     let offer = req.query.offer;
@@ -113,6 +125,29 @@ export const fetchListing = async (req, res, next) => {
   }
 };
 
+export const updateUserStatus = async (req, res) => {
+  
+  const { id } = req.params;
+  const { isBanned } = req.body;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $set: { isBanned: isBanned } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    return res.json({ success: true, data: updatedUser });
+  } catch (error) {
+    console.error("Error updating status:", error);
+    res.status(500).json({ success: false, message: "Failed to update status" });
+  }
+};
+
 export const deleteUser = async (req, res, next) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -125,7 +160,8 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-export const constMoveToDeleteUser = async (req, res, next) => {};
+
+export const constMoveToDeleteUser = async (req, res, next) => { };
 
 export const deleteListing = async (req, res, next) => {
   try {
@@ -139,7 +175,7 @@ export const deleteListing = async (req, res, next) => {
     next(error);
   }
 }
- 
+
 export const permanentDeleteListing = async (req, res, next) => {
   try {
     //add isDeleted to listing model and update later

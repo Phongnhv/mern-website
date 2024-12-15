@@ -7,6 +7,7 @@ import EstateList from "./EstateList";
 import AdminProfile from "./AdminProfile";
 import Feedback from "./Feedback";
 import Report from "./Report";
+import Homepage from "./Homepage";
 
 const AdminDashboard = () => {
   return (
@@ -14,6 +15,7 @@ const AdminDashboard = () => {
       <Sidebar className="fixed"/>
       <div className="flex-grow p-6">
         <Routes>
+          <Route path="homepage" element={<Homepage />} />
           <Route path="user-list" element={<UserList />} />
           <Route path="estate-list" element={<EstateList />} />
           <Route path="profile" element={<AdminProfile />} />

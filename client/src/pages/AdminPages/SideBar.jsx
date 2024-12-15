@@ -57,9 +57,9 @@ const Sidebar = () => {
     </li>
   );
 
-  return (
-    <aside className="h-[90vh]">
-      <nav className=" h-[90vh] flex flex-col bg-gray-800 text-white shadow-sm">
+  return ( 
+    <aside className="min-h-screen overflow-y-auto flex flex-col">
+      <nav className="min-h-screen bg-gray-800 text-white shadow-sm">
         {/* Header Section */}
         <div className="p-4 pb-2 flex justify-between items-center">
           <Link
@@ -83,7 +83,7 @@ const Sidebar = () => {
 
         {/* Sidebar Items */}
         <ul className="flex-1 px-3">
-          <SidebarItem icon={<FaHome />} text="Home" to="/admin" />
+          <SidebarItem icon={<FaHome />} text="Home" to="/admin/homepage" />
           <SidebarItem
             icon={<FaUsers />}
             text="Users Management"

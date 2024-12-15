@@ -7,7 +7,7 @@ function UsersList() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const postsPerPage = 5;
+  const postsPerPage = 10;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -27,6 +27,52 @@ function UsersList() {
 
     fetchUsers();
   }, [currentPage]);
+
+  const updateStatus = async (id, isBanned) => { // TODO Sửa lỗi k ấn được nút Ban sau 
+    try {
+      const response = await fetch(`/api/admin/users/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ isBanned }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        console.log("Update successful:", result.data);
+
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user._id === id ? { ...user, isBanned } : user
+          )
+        );
+      } else {
+        console.error("Update failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/admin/users/${id}/delete`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        console.log("User deleted successfully");
+        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
+        setTotalUsers((prevTotal) => prevTotal - 1); 
+      } else {
+        const result = await response.json();
+        console.error("Delete failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
 
   const totalPages = Math.ceil(totalUsers / postsPerPage);
 
@@ -72,7 +118,7 @@ function UsersList() {
                   <th className="p-2 border border-gray-300">Username</th>
                   <th className="p-2 border border-gray-300">Email</th>
                   <th className="p-2 border border-gray-300">Status</th>
-                  <th className="p-2 border border-gray-300">Actions</th>
+                  <th className="p-2 border border-gray-300 w-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -89,36 +135,29 @@ function UsersList() {
                         {user.email}
                       </td>
                       <td className="p-2 border border-gray-300">
-                        {user.status ? "Banned" : "Active"}
+                        {user.isBanned ? "Banned" : "Active"}
                       </td>
-                      <td className="border border-gray-300 w-[20%]">
-                        <div className="flex justify-between text-white">
+                      <td className="text-white border border-gray-300">
+                        <div className="flex justify-around">
                           <button
-                            value="Ban"
-                            className="flex border rounded-lg bg-red-600 gap-2 p-1"
-                            onClick={() => {
-                              
-                            }}
+                            className={`flex border rounded-lg gap-2 p-1 m-1 ${
+                              user.isBanned ? "bg-green-600" : "bg-red-600"
+                            }`}
+                            onClick={() =>
+                              updateStatus(user._id, { isBanned: !user.isBanned })
+                            }
                           >
-                            Ban
-                            <FaUserAltSlash className="translate-y-[25%]" />
-                          </button>
-                          <button
-                            value="Unban"
-                            className="flex border rounded-lg bg-green-600 gap-2 p-1"
-                            onClick={() => {
-                              
-                            }}
-                          >
-                            Unban
-                            <FaUserCheck className="translate-y-[25%]" />
+                            {user.isBanned ? "Unban" : "Ban"}
+                            {user.isBanned ? (
+                              <FaUserCheck className="translate-y-[25%]" />
+                            ) : (
+                              <FaUserAltSlash className="translate-y-[25%]" />
+                            )}
                           </button>
                           <button
                             value="Delete"
-                            className="flex border rounded-lg bg-gray-600 gap-2 p-1"
-                            onClick={() => {
-                              
-                            }}
+                            className="flex border rounded-lg bg-gray-600 gap-2 xp-1 m-1"
+                            onClick={() => handleDelete(user._id)}
                           >
                             Delete
                             <FaTrash className="translate-y-[25%]" />
