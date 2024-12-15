@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaCheck, FaSearch, FaTrash } from "react-icons/fa";
-import { VscClose } from "react-icons/vsc";
+import { FaCheck, FaMinus, FaSearch, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function EstateList() {
@@ -9,7 +8,7 @@ export default function EstateList() {
   const [listings, setListings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const postsPerPage = 5;
+  const postsPerPage = 10;
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -29,6 +28,52 @@ export default function EstateList() {
 
     fetchListings();
   }, [currentPage]);
+
+  const updateStatus = async (id, status) => { //Mới chỉ cập nhật được trên UI, chưa cập nhật được trong database
+    try {
+      const response = await fetch(`/api/admin/listings/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        console.log("Update successful:", result.data);
+
+        setListings((prevListings) =>
+          prevListings.map((listing) =>
+            listing._id === id ? { ...listing, status } : listing
+          )
+        );
+      } else {
+        console.error("Update failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/admin/listings/${id}/del-ete`, { // TODO Sửa sau khi có api
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        console.log("Listing deleted successfully");
+        setListings((prevListings) => prevListings.filter((listing) => listing._id !== id));
+        setTotalListings((prevTotal) => prevTotal - 1); 
+      } else {
+        const result = await response.json();
+        console.error("Delete failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Error deleting listing:", error);
+    }
+  };
 
   const handleSubmit = async () => {};
 
@@ -73,73 +118,77 @@ export default function EstateList() {
                 <tr>
                   <th className="p-2 border border-gray-300 w-7">ID</th>
                   <th className="p-2 border border-gray-300">Name</th>
-                  <th className="p-2 border border-gray-300">
-                    Address
-                  </th>
+                  <th className="p-2 border border-gray-300">Address</th>
                   <th className="p-2 border border-gray-300">Price</th>
                   <th className="p-2 border border-gray-300">
                     Landlord's Email
                   </th>
                   <th className="p-2 border border-gray-300">Area</th>
                   <th className="p-2 border border-gray-300">Status</th>
-                  <th className="p-2 border border-gray-300">Action</th>
+                  <th className="p-2 border border-gray-300 w-2">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {listings.map((listing, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                      <td className="p-2 border border-gray-300">
-                        {index + 1 + (currentPage - 1) * postsPerPage}
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                      <Link to={`/listing/${listing._id}`}>
-                        {listing.name}
-                        </Link>
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                        {listing.address || "N/A"}
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                        {listing.price}
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                        {listing.email}
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                        {listing.area}
-                      </td>
-                      <td className="p-2 border border-gray-300">
-                        {listing.status}
-                      </td>
-                      <td className="border border-gray-300 w-[20%]">
-                        <div className="flex justify-between text-white">
+
+                    <td className="p-2 border border-gray-300">
+                      {index + 1 + (currentPage - 1) * postsPerPage}
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      <Link to={`/listing/${listing._id}`}>{listing.name}</Link>
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      {listing.address || "N/A"}
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      {listing.price}
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      {listing.email}
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      {listing.area}
+                    </td>
+                    <td className="p-2 border border-gray-300">
+                      {listing.status || "Pending"}
+                    </td>
+                    <td className="text-white border border-gray-300">
+                      <div className="flex justify-around">
+                        {listing.status !== "Approved" && (
                           <button
-                            value="Accept"
-                            className="flex border rounded-lg bg-green-600 gap-2 p-1"
-                            onClick={() => {}}
+                            className="flex border rounded-lg bg-green-600 gap-2 p-1 m-1"
+                            onClick={() =>
+                              updateStatus(listing._id, "Approved")
+                            }
                           >
                             Accept
                             <FaCheck className="translate-y-[25%]" />
                           </button>
+                        )}
+
+                        {listing.status !== "Denied" && (
                           <button
-                            value="Deny"
-                            className="flex border rounded-lg bg-red-600 gap-2 p-1"
-                            onClick={() => {}}
+                            className="flex border rounded-lg bg-red-600 gap-2 p-1 m-1"
+                            onClick={(e) => {
+                              updateStatus(listing._id, "Denied");
+                            }}
                           >
                             Deny
-                            <VscClose className="translate-y-[25%]" />
+                            <FaMinus className="translate-y-[25%]" />
                           </button>
-                          <button
-                            value="Delete"
-                            className="flex border rounded-lg bg-gray-600 gap-2 p-1"
-                            onClick={() => {}}
-                          >
-                            Delete
-                            <FaTrash className="translate-y-[25%]" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                        )}
+
+                        <button
+                          className="flex border rounded-lg bg-gray-600 gap-2 p-1 m-1"
+                          onClick={() => handleDelete(listing._id)}
+                        >
+                          Delete
+                          <FaTrash className="translate-y-[25%]" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>
