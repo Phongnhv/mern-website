@@ -93,7 +93,7 @@ export const fetchListing = async (req, res, next) => {
     const searchTerm = req.query.searchTerm || "";
     const sort = req.query.sort || "createAt";
     const order = req.query.order || "desc";
-    const isDeleted = req.query.isDeleted || false;
+
 
     const totalListing = await Listing.countDocuments({
       name: { $regex: searchTerm, $options: "i" },
@@ -102,7 +102,6 @@ export const fetchListing = async (req, res, next) => {
       parking,
       type,
       status
-      //isDeleted,
     });
 
     const listings = await Listing.find({
@@ -112,8 +111,6 @@ export const fetchListing = async (req, res, next) => {
       parking,
       type,
       status
-      //,
-      //area: { $gte: minArea, $lte: maxArea },
     })
       .sort({ [sort]: order })
       .limit(limit)
@@ -125,20 +122,19 @@ export const fetchListing = async (req, res, next) => {
   }
 };
 
-export const updateUserStatus = async (req, res) => {
-  
+export const banUser = async (req, res) => {
   const { id } = req.params;
-  const { isBanned } = req.body;
-
-  try {
+  const { status } = req.body;
+  
+  try { 
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { $set: { isBanned: isBanned } },
+      { $set: {isBanned: status} },
       { new: true }
     );
-
+    
     if (!updatedUser) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: "Listing not found" });
     }
 
     return res.json({ success: true, data: updatedUser });
@@ -160,13 +156,9 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-
-export const constMoveToDeleteUser = async (req, res, next) => { };
-
 export const deleteListing = async (req, res, next) => {
   try {
-    const listing = await Listing.findByIdAndUpdate(req.params.id, { isDeleted: true });
-    //TODO add getListing if isDeleted = false
+    const listing = await Listing.findByIdAndDelete(req.params.id);
     if (!listing) {
       return next(errorHandler(404, "Listing not found"));
     }
@@ -199,10 +191,6 @@ export const updateListingIsDeletedfield = async () => {
   } catch (err) {
     console.error("Error updating documents:", err);
   }
-};
-
-export const banUser = async (req, res, next) => {
-  //add isBanned to usermodel and update later
 };
 
 export const createAdmin = async (req, res, next) => {

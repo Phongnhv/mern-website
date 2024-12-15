@@ -8,23 +8,23 @@ import {
   getReports,
   deleteReport,
   updateListingStatus,
-  updateUserStatus,
-  deleteUser,
+  deleteUser, 
   deleteListing,
   getUserStatisticsByDate,
   getListingStatisticsByDate,
+  banUser,
 } from "../controllers/admin.controller.js";
 
 const router = express.Router();
 
 router.get("/users", fetchUser);
 router.get("/users/stats", getUserStatisticsByDate);
-router.put("/users/:id/status", updateUserStatus);
-router.delete("/users/:id/delete", deleteUser);
+router.put("/users/ban/:id", banUser);
+router.delete("/users/delete/:id", deleteUser);
 router.get("/listings", fetchListing);
 router.get("/listings/stats", getListingStatisticsByDate);
-router.put("/listings/:id/status", updateListingStatus);
-router.delete("/listings/:id/delete", deleteListing);
+router.put("/listings/status/:id", updateListingStatus);
+router.delete("/listings/delete/:id", deleteListing);
 router.get("/getFeedBacks", getFeedBacks);
 //router.get('/updateUserAdmin', updateUserIsAdminfield)
 //router.get('/updateUserBanned', updateUserIsBannedfield)

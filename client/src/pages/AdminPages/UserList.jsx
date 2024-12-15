@@ -12,12 +12,12 @@ function UsersList() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch(
+        const response = await fetch(
           `/api/admin/users?page=${currentPage}&limit=${postsPerPage}`
         );
-        const data = await res.json();
-        setUsers(data.users);
-        setTotalUsers(data.totalUsers);
+        const result = await response.json();
+        setUsers(result.users);
+        setTotalUsers(result.totalUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
       } finally {
@@ -26,45 +26,46 @@ function UsersList() {
     };
 
     fetchUsers();
-  }, [currentPage]);
+  });
 
-  const updateStatus = async (id, isBanned) => { // TODO Sửa lỗi k ấn được nút Ban sau 
+  const updateStatus = async (id, status) => {
     try {
-      const response = await fetch(`/api/admin/users/${id}/status`, {
+      const response = await fetch(`/api/admin/users/ban/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ isBanned }),
+        body: JSON.stringify({ status }),
       });
 
       const result = await response.json();
+
       if (result.success) {
         console.log("Update successful:", result.data);
 
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
-            user._id === id ? { ...user, isBanned } : user
+            user._id === id ? { ...user, status } : user
           )
         );
       } else {
-        console.error("Update failed:", result.message);
+        console.error(result.message);
       }
     } catch (error) {
-      console.error("Error updating status:", error);
+      console.error("Error toggling ban status:", error);
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/admin/users/${id}/delete`, {
+      const response = await fetch(`/api/admin/users/delete/${id}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
         console.log("User deleted successfully");
         setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
-        setTotalUsers((prevTotal) => prevTotal - 1); 
+        setTotalUsers((prevTotal) => prevTotal - 1);
       } else {
         const result = await response.json();
         console.error("Delete failed:", result.message);
@@ -139,21 +140,28 @@ function UsersList() {
                       </td>
                       <td className="text-white border border-gray-300">
                         <div className="flex justify-around">
-                          <button
-                            className={`flex border rounded-lg gap-2 p-1 m-1 ${
-                              user.isBanned ? "bg-green-600" : "bg-red-600"
-                            }`}
-                            onClick={() =>
-                              updateStatus(user._id, { isBanned: !user.isBanned })
-                            }
-                          >
-                            {user.isBanned ? "Unban" : "Ban"}
-                            {user.isBanned ? (
+                          {user.isBanned && (
+                            <button
+                              className="flex items-center border rounded-lg bg-green-600 gap-1 px-2 py-1"
+                              onClick={() =>
+                                updateStatus(user._id, !user.isBanned)
+                              }
+                            >
+                              Unban
                               <FaUserCheck className="translate-y-[25%]" />
-                            ) : (
+                            </button>
+                          )}
+                          {!user.isBanned && (
+                            <button
+                              className="flex items-center border rounded-lg bg-red-600 gap-1 px-2 py-1"
+                              onClick={() =>
+                                updateStatus(user._id, !user.isBanned)
+                              }
+                            >
+                              Ban
                               <FaUserAltSlash className="translate-y-[25%]" />
-                            )}
-                          </button>
+                            </button>
+                          )}
                           <button
                             value="Delete"
                             className="flex border rounded-lg bg-gray-600 gap-2 xp-1 m-1"
