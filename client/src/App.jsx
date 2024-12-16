@@ -20,6 +20,7 @@ import Setting from "./pages/UserPages/Setting";
 import Footer from "./components/Footer";
 import {PayPalScriptProvider} from "@paypal/react-paypal-js";
 import CreateListingPremium from "./pages/UserPages/CreateListingPremium";
+import ReportForm from "./pages/UserPages/ReportForm";
 
 
 const Layout = ({ children }) => {
@@ -54,6 +55,7 @@ export default function App() {
               <Route path="/create-listing-premium" element={<CreateListingPremium />} />
               <Route path="/update-listing/:listingId" element={<UpdateListing />} />
             </Route>
+            <Route path="/report/:listingId" element={<ReportForm />} />
             <Route element={<AdminRoute />}>
               <Route path="/admin/*" element={<AdminDashboard />} />
             </Route>

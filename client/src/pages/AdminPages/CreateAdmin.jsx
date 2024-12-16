@@ -1,7 +1,11 @@
 import { useState } from "react";
 
 function CreateAdmin() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -24,6 +28,7 @@ function CreateAdmin() {
       setSuccessMessage("Admin created successfully!");
       setLoading(false);
       setError(null);
+      setFormData({ username: "", email: "", password: "" });
     } catch (error) {
       setLoading(false);
       setError(error.message || "An error occurred");
@@ -42,6 +47,7 @@ function CreateAdmin() {
           className="border p-3 rounded-lg"
           id="username"
           placeholder="Username"
+          value={formData.username}
           onChange={handleChange}
         />
         <input
@@ -49,6 +55,7 @@ function CreateAdmin() {
           className="border p-3 rounded-lg"
           id="email"
           placeholder="Email"
+          value={formData.email}
           onChange={handleChange}
         />
         <input
@@ -56,11 +63,13 @@ function CreateAdmin() {
           className="border p-3 rounded-lg"
           id="password"
           placeholder="Password"
+          value={formData.password}
           onChange={handleChange}
         />
         <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
-          Create
+          {loading ? "Creating..." : "Create"}
         </button>
+        
       </form>
       {successMessage && <p className="text-green-500 mt-4">{successMessage}</p>}
       {error && <p className="text-red-500">{error}</p>}
