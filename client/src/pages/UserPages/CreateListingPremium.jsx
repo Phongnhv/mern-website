@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import {
   getDownloadURL,
   getStorage,
@@ -11,9 +10,9 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import locationsData from '../locations.json'; 
 import { useDispatch } from 'react-redux';
-import { minusSilverCard } from '../../redux/user/userSlice';
+import { minusGoldCard } from '../../redux/user/userSlice';
 
-export default function CreateListing() {
+export default function CreateListingPremium() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
@@ -39,24 +38,6 @@ export default function CreateListing() {
 
   const [locations, setLocations] = useState({});
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-
-  const openPopup = () => {
-    setShowPopup(true);
-  }
-
-  const closePopup = () => {
-    setShowPopup(false);
-  }
-
-  const handleOpen = () => {
-    setIsOpen(true);
-  }
-
-  const handleClose = () => {
-    setIsOpen(false);
-  }
   useEffect(() => {
     setLocations(locationsData);
   }, []);
@@ -67,9 +48,20 @@ export default function CreateListing() {
     setDistricts(locations[city] || []);
   };
 
+  const [showPopup, setShowPopup] = useState(false);
+
+  const openPopup = () => {
+    setShowPopup(true);
+  }
+
+  const closePopup = () => {
+    setShowPopup(false);
+  }
+
+
   console.log(formData);
   const handleImageSubmit = (e) => {
-    if (files.length > 0 && files.length + formData.imageUrls.length < 4) {
+    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
       setImageUploadError(false);
       const promises = [];
@@ -91,7 +83,7 @@ export default function CreateListing() {
           setUploading(false);
         });
     } else {
-      setImageUploadError('You can only upload 3 images per listing');
+      setImageUploadError('You can only upload 6 images per listing');
       setUploading(false);
     }
   };
@@ -153,20 +145,14 @@ export default function CreateListing() {
         ...formData,
         [e.target.id]: e.target.value,
       });
-    } 
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (currentUser.silverCard <= 0)
-      {
+      if (currentUser.goldCard <= 0){
         openPopup();
-        return;
-      }
-      if (+formData.regularPrice >= 50000)
-      {
-        handleOpen();
         return;
       }
       if (formData.imageUrls.length < 1)
@@ -183,7 +169,7 @@ export default function CreateListing() {
         body: JSON.stringify({
           ...formData,
           userRef: currentUser._id,
-          isPremium:false,
+          isPremium:true,
         }),
       });
       const data = await res.json();
@@ -191,7 +177,7 @@ export default function CreateListing() {
       if (data.success === false) {
         setError(data.message);
       }
-      dispatch(minusSilverCard(1))
+      dispatch(minusGoldCard(1))
       navigate(`/listing/${data._id}`);
     } catch (error) {
       setError(error.message);
@@ -331,7 +317,9 @@ export default function CreateListing() {
                 <p>Regular price</p>
                 {formData.type === 'rent' ? (
                   <span className='text-xs'>($ / month)</span>
-                ) : (<span className='text-xs'>($)</span>)}
+                ):(
+                    <span className='text-xs'>($)</span>
+                  )}
               </div>
             </div>
             {formData.offer && (
@@ -360,7 +348,7 @@ export default function CreateListing() {
           <p className='font-semibold'>
             Images:
             <span className='font-normal text-gray-600 ml-2'>
-              The first image will be the cover (max 3)
+              The first image will be the cover (max 6)
             </span>
           </p>
           <div className='flex gap-4'>
@@ -414,69 +402,37 @@ export default function CreateListing() {
         </div>
       </form>
       {
-        isOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
-                  {/* Close button at the top-right */}
-                  <button
-                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-lg"
-                    onClick={handleClose}
-                  >
-                    &times;
-                  </button>
-          
-                  {/* Title */}
-                  <h2 className="text-xl font-semibold mb-4 text-center"> Property Alert</h2>
-          
-                  {/* Buttons for options */}
-                  <p className="mb-4 items-start gap-2 flex"> 
-                    You must use Premium Card for over 50 000$ property
-                  </p>
-                  <div className="flex flex-col items-center gap-4">
-                    
-                    <Link
-                      className="w-full text-center bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition"
-                      to='/create-listing-premium'
-                    >
-                      Go to Premium Create
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              )
-      }
-      {
-        showPopup && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
-                  {/* Close button at the top-right */}
-                  <button
-                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-lg"
-                    onClick={closePopup}
-                  >
-                    &times;
-                  </button>
-          
-                  {/* Title */}
-                  <h2 className="text-xl font-semibold mb-4 text-center"> Balance Alert</h2>
-          
-                  {/* Buttons for options */}
-                  <p className="mb-4 items-start gap-2 flex"> 
-                    You don't have enough Card to create this property
-                  </p>
-                  <div className="flex flex-col items-center gap-4">
-                    
-                    <Link
-                      className="w-full text-center bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition"
-                      to='/settings/store'
-                    >
-                      Go to Store
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              )
-      }
+              showPopup && (
+                      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                      <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+                        {/* Close button at the top-right */}
+                        <button
+                          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-lg"
+                          onClick={closePopup}
+                        >
+                          &times;
+                        </button>
+                
+                        {/* Title */}
+                        <h2 className="text-xl font-semibold mb-4 text-center"> Balance Alert</h2>
+                
+                        {/* Buttons for options */}
+                        <p className="mb-4 items-start gap-2 flex"> 
+                          You don't have enough Card to create this property
+                        </p>
+                        <div className="flex flex-col items-center gap-4">
+                          
+                          <Link
+                            className="w-full text-center bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition"
+                            to='/settings/store'
+                          >
+                            Go to Store
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                    )
+            }
     </main>
   );
 }

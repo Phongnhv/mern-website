@@ -9,7 +9,7 @@ import {
 } from 'firebase/storage';
 import { app } from '../../firebase';
 import { Link } from "react-router-dom";
-import { FaPlusCircle, FaRegCreditCard, FaTrash, FaEdit, FaPlus } from "react-icons/fa";
+import { FaTasks ,FaPlusCircle, FaRegCreditCard, FaTrash, FaEdit, FaInfoCircle } from "react-icons/fa";
 
 export default function UserList() {
   const fileRef = useRef(null);
@@ -19,6 +19,15 @@ export default function UserList() {
   const [formData, setFormData] = useState({});
   const [showListingsError, setShowListingsError] = useState(false);
   const [userListings, setUserListings] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => {
+    setIsOpen(true);
+  }
+
+  const handleClose = () => {
+    setIsOpen(false);
+  }
 
   useEffect(() => {
     if (file) {
@@ -92,7 +101,9 @@ export default function UserList() {
   return (
     <div className=" max-w-full mx-auto bg-slate-100 shadow-md rounded-lg p-3"> {/* Increased padding */}
       <div>
-        <h1 className="text-center text-3xl font-semibold col-span-2 mb-6 mt-6">Your Property List</h1>
+        <div className = "text-4xl flex justify-center items-start text-center gap-2">
+              <FaTasks></FaTasks> Your Property List
+            </div>
         <hr className="border-gray-300 my-4" />
         <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-md">
           <div className="flex items-center gap-6">
@@ -117,12 +128,13 @@ export default function UserList() {
     
         <div className="flex items-center gap-4">
         {/* Nút Create */}
-        <Link
+        
+        <button
           className="bg-green-700 text-white px-4 py-2 rounded-lg uppercase text-center hover:opacity-90 text-sm font-medium"
-          to={"/create-listing"}
+          onClick = {handleOpen}
         >
           Create
-        </Link>
+        </button>
         
       </div>
       </div>
@@ -188,6 +200,41 @@ export default function UserList() {
             </div>
           ))}
         </div>
+      )}
+      {isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+          {/* Close button at the top-right */}
+          <button
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-lg"
+            onClick={handleClose}
+          >
+            &times;
+          </button>
+  
+          {/* Title */}
+          <h2 className="text-xl font-semibold mb-4 text-center">Choose Create Property Type</h2>
+  
+          {/* Buttons for options */}
+          <p className="mb-4 items-start gap-2 flex"> 
+            Note: Listing created by Premium Card will offer more features than normal one. Also you can't create Property that value over 40 000$ without Premium Card
+          </p>
+          <div className="flex flex-col items-center gap-4">
+            <Link
+              className="items-center justify-center text-center w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
+              to='/create-listing'
+            >
+              Normal Create
+            </Link>
+            <Link
+              className="w-full text-center bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition"
+              to='/create-listing-premium'
+            >
+              Premium Create
+            </Link>
+          </div>
+        </div>
+      </div>
       )}
     </div>
   );

@@ -12,25 +12,25 @@ export default function Store() {
   const dispatch = useDispatch();
   const bundle = {
     "bundle1": {
-      description: "Single Silver card",
+      description: "Singe Common Card",
       type: "silver",
       quantity: 1,
       price: 4.99
     },
     "bundle2": {
-      description: "Single Gold card",
+      description: "Single Premium Card",
       quantity: 1,
       type:"gold",
       price: 9.99
     },
     "bundle3": {
-      description: "3 Silver card bundle",
+      description: "Three Common Card Bundle",
       quantity: 3,
       type: "silver",
       price: 11.99
     },
     "bundle4": {
-      description: "3 Gold card bundle",
+      description: "Three Gold Card Bundle",
       quantity: 3,
       type: "gold",
       price: 24.99
