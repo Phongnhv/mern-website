@@ -8,6 +8,7 @@ import AdminProfile from "./AdminProfile";
 import Feedback from "./Feedback";
 import Report from "./Report";
 import Homepage from "./Homepage";
+import CreateAdmin from "./CreateAdmin";
 
 const AdminDashboard = () => {
   return (
@@ -21,6 +22,7 @@ const AdminDashboard = () => {
           <Route path="profile" element={<AdminProfile />} />
           <Route path="feed-back" element={<Feedback />} />
           <Route path="report" element={<Report />} />
+          <Route path="new-admin" element={<CreateAdmin/>} />
         </Routes>
       </div>
     </div>

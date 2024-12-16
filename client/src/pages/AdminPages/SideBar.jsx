@@ -9,6 +9,7 @@ import {
 import { ChevronLast, ChevronFirst } from "lucide-react";
 import { VscFeedback, VscSettingsGear } from "react-icons/vsc";
 import { TbReport } from "react-icons/tb";
+import { IoPersonAddSharp } from "react-icons/io5";
 import { FaBuilding, FaHome, FaSignOutAlt, FaUsers } from "react-icons/fa";
 
 const Sidebar = () => {
@@ -106,6 +107,12 @@ const Sidebar = () => {
             text="Setting"
             to="/admin/profile"
           />
+          <SidebarItem
+            icon={<IoPersonAddSharp />}
+            text="Add new Admin"
+            to="/admin/new-admin"
+          />
+          
           <li
             className="relative flex items-center py-2 px-3 my-1
             font-medium rounded-md cursor-pointer

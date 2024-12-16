@@ -1,6 +1,7 @@
 import Listing from "../models/listing.model.js";
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/errorHandler.js";
+import bcryptjs from 'bcryptjs'
 import FeedBack from "../models/feedback.model.js";
 import Report from "../models/report.model.js";
 import mongoose from "mongoose";
@@ -36,7 +37,7 @@ export const fetchUser = async (req, res, next) => {
 //limit = 5
 
 export const updateListingStatus = async (req, res) => {
-  
+
   const { id } = req.params;
   const { status } = req.body;
 
@@ -61,60 +62,30 @@ export const updateListingStatus = async (req, res) => {
 
 
 export const fetchListing = async (req, res, next) => {
-  //code như trên nhưng cho user
   try {
     const limit = parseInt(req.query.limit) || 10;
     const page = parseInt(req.query.page) || 1;
     const startIndex = (page - 1) * limit;
-    let offer = req.query.offer;
-
-    if (offer === undefined || offer === "false") {
-      offer = { $in: [false, true] };
-    }
-    let furnished = req.query.furnished;
-    if (furnished === undefined || furnished === "false") {
-      furnished = { $in: [false, true] };
-    }
-
-    let parking = req.query.parking;
-    if (parking === undefined || parking === "false") {
-      parking = { $in: [false, true] };
-    }
-
-    let type = req.query.type;
-    if (type === undefined || type === "all") {
-      type = { $in: ["sale", "rent"] };
-    }
-    let status = req.query.status;
-    if (status === undefined || status === "all") {
-      status = { $in: ["Pending", "Approved", "Rejected"] };
-    }
 
     const searchTerm = req.query.searchTerm || "";
-    const sort = req.query.sort || "createAt";
+    const sort = req.query.sort || "createdAt";
     const order = req.query.order || "desc";
-
-
-    const totalListing = await Listing.countDocuments({
-      name: { $regex: searchTerm, $options: "i" },
-      offer,
-      furnished,
-      parking,
-      type,
-      status
-    });
 
     const listings = await Listing.find({
       name: { $regex: searchTerm, $options: "i" },
-      offer,
-      furnished,
-      parking,
-      type,
-      status
     })
       .sort({ [sort]: order })
       .limit(limit)
-      .skip(startIndex);
+      .skip(startIndex)
+      .populate({
+        path: "userRef", 
+        select: "email", 
+        model: User,    
+      });
+
+    const totalListing = await Listing.countDocuments({
+      name: { $regex: searchTerm, $options: "i" },
+    });
 
     return res.status(200).json({ listings, totalListing });
   } catch (error) {
@@ -125,14 +96,14 @@ export const fetchListing = async (req, res, next) => {
 export const banUser = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
-  
-  try { 
+
+  try {
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { $set: {isBanned: status} },
+      { $set: { isBanned: status } },
       { new: true }
     );
-    
+
     if (!updatedUser) {
       return res.status(404).json({ success: false, message: "Listing not found" });
     }

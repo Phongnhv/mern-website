@@ -7,6 +7,7 @@ import {
   getUser,
   createReport,
   createFeedBack,
+  createOrder,
 } from "../controllers/user.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
@@ -19,4 +20,5 @@ router.get("/listings/:id", verifyToken, getUserListings);
 router.get("/:id", verifyToken, getUser);
 router.post("/createReport", createReport);
 router.post("/createFeedBack", createFeedBack);
+router.post("/createOrder", createOrder);
 export default router;

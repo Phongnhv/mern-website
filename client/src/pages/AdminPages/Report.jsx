@@ -73,7 +73,7 @@ export default function Report() {
         </h1>
         <button
           className={`${
-            selected ? "bg-red-700 hover:bg-red-800" : "bg-red-800"
+            selected ? "bg-red-700 hover:bg-red-800" : "bg-gray-800"
           } text-white rounded-lg uppercase p-3`}
           disabled={!selected}
           onClick={handleDelete}

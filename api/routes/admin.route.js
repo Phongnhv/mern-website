@@ -13,6 +13,7 @@ import {
   getUserStatisticsByDate,
   getListingStatisticsByDate,
   banUser,
+  createAdmin,
 } from "../controllers/admin.controller.js";
 
 const router = express.Router();
@@ -26,8 +27,7 @@ router.get("/listings/stats", getListingStatisticsByDate);
 router.put("/listings/status/:id", updateListingStatus);
 router.delete("/listings/delete/:id", deleteListing);
 router.get("/getFeedBacks", getFeedBacks);
-//router.get('/updateUserAdmin', updateUserIsAdminfield)
-//router.get('/updateUserBanned', updateUserIsBannedfield)
+router.post('/createAdmin', createAdmin)
 router.delete("/deleteFeedBack/:id", deleteFeedBack);
 router.get("/getReports", getReports);
 router.delete("/deleteReport/:id", deleteReport);

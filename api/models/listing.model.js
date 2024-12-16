@@ -59,13 +59,18 @@ const listingSchema = new mongoose.Schema(
       required: true,
     },
     userRef: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     status: {
-      type: String, 
+      type: String,
       default: "Pending",
-    }
+    },
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

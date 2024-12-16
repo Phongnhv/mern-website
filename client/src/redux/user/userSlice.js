@@ -58,6 +58,18 @@ const userSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
+        updateSilverCard: (state, action) => {
+            state.currentUser.silverCard += action.payload; // Cộng thêm số lượng silverCard
+        },
+        updateGoldCard: (state, action) => {
+            state.currentUser.goldCard += action.payload; // Cộng thêm số lượng goldCard
+        },
+        minusSilverCard: (state, action) => {
+            state.currentUser.silverCard -= action.payload; // Cộng thêm số lượng silverCard
+        },
+        minusGoldCard: (state, action) => {
+            state.currentUser.goldCard -= action.payload; // Cộng thêm số lượng goldCard
+        },
     }
 });
 
@@ -74,6 +86,10 @@ export const {
     signOutUserStart,
     signOutUserSuccess,
     signOutUserFailure,
+    updateSilverCard,
+    updateGoldCard,
+    minusGoldCard,
+    minusSilverCard
  } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -120,7 +120,7 @@ export default function UserProfile() {
           hidden
           accept="image/*"
         />
-        <div className="relative border-4 border-white rounded-full shadow-2xl bottom-28 left-10 shadow-2xl bg-red-200 h-32 w-32">
+        <div className="relative border-4 border-white rounded-full bottom-28 left-10 shadow-2xl bg-red-200 h-32 w-32">
           <img
             onClick={() => fileRef.current.click()}
             src={formData.avatar || currentUser.avatar}

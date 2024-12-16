@@ -13,12 +13,14 @@ import Listing from "./pages/Listing";
 import AdminRoute from "./components/AdminRoute";
 import AdminDashboard from "./pages/AdminPages/AdminDashboard";
 import PublicRoute from "./components/PublicRoute";
-import ReportForm from "./pages/UserPages/ReportForm";
 
 import AdminProfile from "./pages/AdminPages/AdminProfile";
 import Setting from "./pages/UserPages/Setting";
 
 import Footer from "./components/Footer";
+import {PayPalScriptProvider} from "@paypal/react-paypal-js";
+import CreateListingPremium from "./pages/UserPages/CreateListingPremium";
+
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -34,31 +36,30 @@ const Layout = ({ children }) => {
 };
 export default function App() {
   return (
-    <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route element={<PublicRoute />}>
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-          </Route>
-          <Route path="/about" element={<About />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/listing/:listingId" element={<Listing />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/settings/*" element={<Setting />} />
-            <Route path="/create-listing" element={<CreateListing />} />
-            <Route
-              path="/update-listing/:listingId"
-              element={<UpdateListing />}
-            />
-            <Route path="/report/:listingId" element={<ReportForm />} />
-          </Route>
-          <Route element={<AdminRoute />}>
-            <Route path="/admin/*" element={<AdminDashboard />} />
-          </Route>
-        </Routes>
-      </Layout>
-    </BrowserRouter>
+    <PayPalScriptProvider options={{ "client-id": "AdDGnWpwA8QGlbl0lkELFNuEgw1DrdFWeA4fHoXHBX89_3VdoJ9lo_iQCY9_eSgRIrlAbqC3r-9Sivqu" }}>  
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route element={<PublicRoute />}>
+              <Route path="/sign-in" element={<SignIn/>} />
+              <Route path="/sign-up" element={<SignUp />} />
+            </Route>
+            <Route path="/about" element={<About />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/listing/:listingId" element={<Listing />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/settings/*" element={<Setting  />} />
+              <Route path="/create-listing" element={<CreateListing />} />
+              <Route path="/create-listing-premium" element={<CreateListingPremium />} />
+              <Route path="/update-listing/:listingId" element={<UpdateListing />} />
+            </Route>
+            <Route element={<AdminRoute />}>
+              <Route path="/admin/*" element={<AdminDashboard />} />
+            </Route>
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+     </PayPalScriptProvider>
   );
 }

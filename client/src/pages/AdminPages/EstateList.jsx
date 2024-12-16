@@ -15,7 +15,9 @@ export default function EstateList() {
       setLoading(true);
       setListings([]);
       try {
-        const res = await fetch(`/api/admin/listings?page=${currentPage}`);
+        const res = await fetch(
+          `/api/admin/listings?page=${currentPage}&searchTerm=${searchTerm}`
+        );
         const data = await res.json();
         setListings(data.listings);
         setTotalListings(data.totalListing);
@@ -27,7 +29,7 @@ export default function EstateList() {
     };
 
     fetchListings();
-  }, [currentPage]);
+  }, [currentPage, searchTerm]);
 
   const updateStatus = async (id, status) => {
     try {
@@ -105,7 +107,7 @@ export default function EstateList() {
         </form>
       </div>
       <div className="p-4 gap-2">
-        {!loading && listings.length === 0 && (
+        {!loading && totalListings === 0 && (
           <p className="text-xl text-slate-700">No listing found!</p>
         )}
         {loading && (
@@ -126,7 +128,7 @@ export default function EstateList() {
                   <th className="p-2 border border-gray-300">
                     Landlord's Email
                   </th>
-                  <th className="p-2 border border-gray-300">Area</th>
+                  <th className="p-2 border border-gray-300">Type</th>
                   <th className="p-2 border border-gray-300">Status</th>
                   <th className="p-2 border border-gray-300 w-2">Action</th>
                 </tr>
@@ -144,13 +146,13 @@ export default function EstateList() {
                       {listing.address || "N/A"}
                     </td>
                     <td className="p-2 border border-gray-300">
-                      {listing.price}
+                      {listing.regularPrice - listing.discountPrice}
                     </td>
                     <td className="p-2 border border-gray-300">
-                      {listing.email}
+                      {listing.userRef?.email || "N/A"}
                     </td>
                     <td className="p-2 border border-gray-300">
-                      {listing.area}
+                      {listing.isPremium ? "Premium" : "Normal"}
                     </td>
                     <td className="p-2 border border-gray-300">
                       {listing.status}

@@ -13,7 +13,7 @@ function UsersList() {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          `/api/admin/users?page=${currentPage}&limit=${postsPerPage}`
+          `/api/admin/users?page=${currentPage}&searchTerm=${searchTerm}`
         );
         const result = await response.json();
         setUsers(result.users);
@@ -26,7 +26,7 @@ function UsersList() {
     };
 
     fetchUsers();
-  });
+  }, [currentPage, searchTerm]);
 
   const updateStatus = async (id, status) => {
     try {
@@ -142,7 +142,7 @@ function UsersList() {
                         <div className="flex justify-around">
                           {user.isBanned && (
                             <button
-                              className="flex items-center border rounded-lg bg-green-600 gap-1 px-2 py-1"
+                              className="flex items-center border rounded-lg bg-green-600 gap-2 p-1 m-1"
                               onClick={() =>
                                 updateStatus(user._id, !user.isBanned)
                               }
@@ -153,18 +153,18 @@ function UsersList() {
                           )}
                           {!user.isBanned && (
                             <button
-                              className="flex items-center border rounded-lg bg-red-600 gap-1 px-2 py-1"
+                              className="flex items-center border rounded-lg bg-red-600 gap-2 p-1 m-1"
                               onClick={() =>
                                 updateStatus(user._id, !user.isBanned)
                               }
                             >
                               Ban
-                              <FaUserAltSlash className="translate-y-[25%]" />
+                              <FaUserAltSlash />
                             </button>
                           )}
                           <button
                             value="Delete"
-                            className="flex border rounded-lg bg-gray-600 gap-2 xp-1 m-1"
+                            className="flex border rounded-lg bg-gray-600 gap-2 p-1 m-1"
                             onClick={() => handleDelete(user._id)}
                           >
                             Delete
