@@ -7,7 +7,7 @@ import listingRouter from './routes/listing.route.js';
 import adminRouter from './routes/admin.route.js';
 import cookieParser from "cookie-parser";
 import cors from 'cors';
- 
+
 dotenv.config();
  
 mongoose
@@ -23,6 +23,8 @@ const app = express();
 app.use(express.json());
  
 app.use(cookieParser());
+
+app.use(cors());
  
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
@@ -34,16 +36,6 @@ app.use('/api/listing', listingRouter);
 app.use("/api/admin", adminRouter);
 
 
-// Chỉ cho phép frontend của bạn
-const corsOptions = {
-  origin: 'https://mern-website-g35.web.app/', // Thay bằng URL của frontend
-  methods: 'GET,POST,PUT,DELETE',       // Các method HTTP được phép
-  credentials: true                     // Cho phép gửi cookie nếu cần
-};
-
-app.use(cors(corsOptions));
-
- 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
