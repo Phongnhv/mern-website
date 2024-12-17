@@ -166,7 +166,7 @@ export default function CreateListingPremium() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }, credentials : 'include',
+        }, 
         body: JSON.stringify({
           ...formData,
           userRef: currentUser._id,
