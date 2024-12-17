@@ -24,12 +24,7 @@ app.use(express.json());
  
 app.use(cookieParser());
 
-app.use(cors({
-  credentials: true,
-  origin: ["http://localhost:5173",
-      "https://mern-website-o2el.onrender.com"
-  ]
-}));
+app.use(cors());
  
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
