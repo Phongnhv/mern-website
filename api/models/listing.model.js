@@ -66,6 +66,10 @@ import mongoose from 'mongoose';
         type: String,
         default: 'Pending',
       },
+      isPremium:{
+        type: Boolean,
+        default: false,
+      },
   },
   { timestamps: true }
 );
