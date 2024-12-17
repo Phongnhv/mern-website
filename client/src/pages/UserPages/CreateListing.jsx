@@ -180,7 +180,7 @@ export default function CreateListing() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }, credentials : 'include',
+        }, 
         body: JSON.stringify({
           ...formData,
           userRef: currentUser._id,
