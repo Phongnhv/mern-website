@@ -28,7 +28,7 @@ function UsersList() {
     };
 
     fetchUsers();
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, users]);
 
   const updateStatus = async (id, status) => {
     try {

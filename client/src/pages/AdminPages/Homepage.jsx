@@ -141,7 +141,7 @@ const Dashboard = () => {
                     <tr key={item._id} className="hover:bg-gray-100">
                       <td className="border border-gray-300 p-2">{item._id}</td>
                       <td className="border border-gray-300 p-2">
-                        {item.totalIncome}
+                        {item.totalIncome.toFixed(2)}
                       </td>
                     </tr>
                   ))}

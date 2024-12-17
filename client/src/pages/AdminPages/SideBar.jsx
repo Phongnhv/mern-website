@@ -48,7 +48,7 @@ const Sidebar = () => {
         }
       `}
     >
-      <Link to={to} className="flex items-center w-full">
+      <Link to={to} className="flex items-center w-full h-6">
         {icon}
         <span
           className={`overflow-hidden transition-all ${
@@ -61,19 +61,22 @@ const Sidebar = () => {
     </li>
   );
 
-  return ( 
+  return (
     <aside className="min-h-screen overflow-y-auto flex flex-col">
       <nav className="min-h-screen bg-gray-800 text-white shadow-sm">
         {/* Header Section */}
         <div className="p-4 pb-2 flex justify-between items-center">
-          <span
+          <Link
+            to={"/"}
             className={`overflow-hidden transition-all ${
               expanded ? "w-52 ml-3" : "w-0"
             }`}
           >
-            <span className="text-slate-100 font-bold">Group35</span>
-            <span className="text-slate-300 font-bold">Estate</span>
-          </span>
+            <span>
+              <span className="text-slate-100 font-bold">Group35</span>
+              <span className="text-slate-300 font-bold">Estate</span>
+            </span>
+          </Link>
           <button
             onClick={() => setExpanded((curr) => !curr)}
             className="p-1.5 rounded-lg bg-gray-700 hover:bg-gray-600"
@@ -111,20 +114,22 @@ const Sidebar = () => {
             text="Add new Admin"
             to="/admin/new-admin"
           />
-          
+
           <li
             className="relative flex items-center py-2 px-3 my-1
             font-medium rounded-md 
             transition-colors hover:bg-gray-600 cursor-pointer text-gray-300"
             onClick={handleSignOut}
           >
-            <FaSignOutAlt />
-            <span
-              className={`overflow-hidden transition-all ${
-                expanded ? "w-52 ml-3" : "w-0"
-              }`}
-            >
-              Sign Out
+            <span className="flex items-center w-full h-6">
+              <FaSignOutAlt />
+              <span
+                className={`overflow-hidden transition-all ${
+                  expanded ? "w-52 ml-3" : "w-0"
+                }`}
+              >
+                Sign Out
+              </span>
             </span>
           </li>
         </ul>

@@ -20,7 +20,7 @@ export default function Report() {
   // Hàm gọi API để lấy report
   const fetchReports = async () => {
     try {
-      const response = await fetch(`${apiUrl}/${API_BASE_URL}/getReports`);
+      const response = await fetch(`${apiUrl}/api/admin/getReports`);
       if (!response.ok) {
         throw new Error("Failed to fetch reports");
       }
@@ -39,7 +39,7 @@ export default function Report() {
   // Hàm gọi API để xóa report
   const deleteReport = async (id) => {
     try {
-      const response = await fetch(`${apiUrl}/${API_BASE_URL}/deleteReport/${id}`, {
+      const response = await fetch(`${apiUrl}/api/admin/deleteReport/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {

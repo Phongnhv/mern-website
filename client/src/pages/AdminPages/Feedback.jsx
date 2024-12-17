@@ -20,7 +20,7 @@ export default function Feedback() {
   // Hàm gọi API để lấy feedbacks
   const fetchFeedbacks = async () => {
     try {
-      const response = await fetch(`${apiUrl}/${API_BASE_URL}/getFeedBacks`);
+      const response = await fetch(`${apiUrl}/api/admin/getFeedBacks`);
       if (!response.ok) {
         throw new Error("Failed to fetch feedbacks");
       }
@@ -39,7 +39,7 @@ export default function Feedback() {
   // Hàm gọi API để xóa feedback
   const deleteFeedback = async (id) => {
     try {
-      const response = await fetch(`${apiUrl}${API_BASE_URL}/deleteFeedBack/${id}`, {
+      const response = await fetch(`${apiUrl}/api/admin/deleteFeedBack/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
