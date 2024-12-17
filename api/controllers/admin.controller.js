@@ -1,5 +1,6 @@
 import Listing from "../models/listing.model.js";
 import User from "../models/user.model.js";
+import Order from "../models/order.model.js";
 import { errorHandler } from "../utils/errorHandler.js";
 import bcryptjs from 'bcryptjs'
 import FeedBack from "../models/feedback.model.js";
@@ -223,6 +224,28 @@ export const getListingStatisticsByDate = async (req, res, next) => {
       },
       {
         $sort: { _id: -1 }, // Sắp xếp theo ngày giảm
+      },
+    ]);
+
+    res.status(200).json(stats);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getOrderStatisticsByDate = async (req, res, next) => {
+  try {
+    const stats = await Order.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+          },
+          totalIncome: { $sum: "$price" }, // Tổng doanh thu cho mỗi ngày
+        },
+      },
+      {
+        $sort: { _id: -1 }, // Sắp xếp theo ngày giảm dần
       },
     ]);
 
