@@ -99,7 +99,7 @@ export default function EstateList() {
     <div className="flex-auto mt-2">
       <div className="px-4 pb-4 flex justify-between">
         <h1 className="text-3xl font-semibold border-b text-slate-700">
-          Listing results:
+          Property List
         </h1>
         <form
           onSubmit={handleSubmit}

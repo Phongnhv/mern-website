@@ -30,11 +30,11 @@ const userSchema = new mongoose.Schema(
     },
     silverCard:{
       type: Number,
-      default: 0
+      default: 4
     },
     goldCard:{
       type: Number,
-      default: 0
+      default: 1
     },
   },
   { timestamps: true }

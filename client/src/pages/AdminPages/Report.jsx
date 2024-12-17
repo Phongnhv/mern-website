@@ -69,7 +69,7 @@ export default function Report() {
     <div className="h-full">
       <div className="flex justify-between">
         <h1 className="text-3xl font-semibold border-b text-slate-700">
-          Report:
+          User Reports
         </h1>
         <button
           className={`${
