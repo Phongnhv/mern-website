@@ -99,8 +99,8 @@ export const getListings = async (req, res, next) => {
         { discountPrice: { $gte: minPrice, $lte: maxPrice } },
       ],
       $or: [
-        { address: { $regex: searchTerm, $options: "i" } },
         { name: { $regex: searchTerm, $options: "i" } },
+        { address: { $regex: searchTerm, $options: "i" } },
       ],
       offer,
       furnished,
