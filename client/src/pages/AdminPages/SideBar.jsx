@@ -11,10 +11,9 @@ import { VscFeedback } from "react-icons/vsc";
 import { TbReport } from "react-icons/tb";
 
 import { ImProfile } from "react-icons/im";
-
-
 import { IoPersonAddSharp } from "react-icons/io5";
 import { FaBuilding, FaHome, FaSignOutAlt, FaUsers } from "react-icons/fa";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);
@@ -24,7 +23,7 @@ const Sidebar = () => {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch("/api/auth/signout");
+      const res = await fetch(`${apiUrl}/api/auth/signout`);
       const data = await res.json();
       if (data.success === false) {
         dispatch(signOutUserFailure(data.message));

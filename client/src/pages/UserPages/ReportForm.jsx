@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import reportImage from "../../components/images/reportImage.jpg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 export default function ReportForm() {
   const { listingId } = useParams();
   const { currentUser } = useSelector((state) => state.user);
@@ -48,7 +48,7 @@ export default function ReportForm() {
 
     try {
       // Make the API request to create a new report
-      const response = await fetch(`/api/user/createReport`, {
+      const response = await fetch(`${apiUrl}/api/user/createReport`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaBan, FaSearch, FaTrash } from "react-icons/fa";
 import { FaUserAltSlash, FaUserCheck } from "react-icons/fa";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 function UsersList() {
   const [loading, setLoading] = useState(false);
   const [totalUsers, setTotalUsers] = useState(0);
@@ -15,7 +15,7 @@ function UsersList() {
       try {
 
         const response = await fetch(
-          `/api/admin/users?page=${currentPage}&searchTerm=${searchTerm}`
+          `${apiUrl}/api/admin/users?page=${currentPage}&searchTerm=${searchTerm}`
         );
         const result = await response.json();
         setUsers(result.users);
@@ -32,7 +32,7 @@ function UsersList() {
 
   const updateStatus = async (id, status) => {
     try {
-      const response = await fetch(`/api/admin/users/ban/${id}`, {
+      const response = await fetch(`${apiUrl}/api/admin/users/ban/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +60,7 @@ function UsersList() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/admin/users/delete/${id}`, {
+      const response = await fetch(`${apiUrl}/api/admin/users/delete/${id}`, {
         method: "DELETE",
       });
 

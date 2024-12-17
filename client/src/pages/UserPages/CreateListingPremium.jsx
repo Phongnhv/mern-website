@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import locationsData from '../locations.json'; 
 import { useDispatch } from 'react-redux';
 import { minusGoldCard } from '../../redux/user/userSlice';
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function CreateListingPremium() {
   const { currentUser } = useSelector((state) => state.user);
@@ -161,7 +162,7 @@ export default function CreateListingPremium() {
         return setError('Discount price must be lower than regular price');
       setLoading(true);
       setError(false);
-      const res = await fetch('/api/listing/create', {
+      const res = await fetch(`${apiUrl}/api/listing/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
