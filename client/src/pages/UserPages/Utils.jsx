@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 export default function Utils() {
   const { currentUser } = useSelector((state) => state.user);
   const [postTitle, setPostTitle] = useState("");
@@ -23,7 +23,7 @@ export default function Utils() {
     }
 
     try {
-      const response = await fetch("/api/user/createFeedBack", {
+      const response = await fetch(`${apiUrl}/api/user/createFeedBack`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

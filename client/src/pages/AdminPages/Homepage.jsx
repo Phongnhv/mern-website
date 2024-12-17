@@ -23,6 +23,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Dashboard = () => {
   const [userStats, setUserStats] = useState([]);
@@ -30,14 +31,15 @@ const Dashboard = () => {
   const [orderStats, setOrderStats] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalListings, setTotalListings] = useState(0);
+  
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const [usersRes, listingsRes, ordersRes] = await Promise.all([
-          fetch("/api/admin/users/stats"),
-          fetch("/api/admin/listings/stats"),
-          fetch("/api/admin/orders/stats"),
+          fetch(`${apiUrl}/api/admin/users/stats`),
+          fetch(`${apiUrl}/api/admin/listings/stats`),
+          fetch(`${apiUrl}/api/admin/orders/stats`),
         ]);
 
         const [usersData, listingsData, ordersData] = await Promise.all([

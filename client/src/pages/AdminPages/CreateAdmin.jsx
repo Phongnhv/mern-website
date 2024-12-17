@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 function CreateAdmin() {
   const [formData, setFormData] = useState({
     username: "",
@@ -14,7 +14,7 @@ function CreateAdmin() {
     try {
       setLoading(true);
       setSuccessMessage("");
-      const res = await fetch("/api/admin/createAdmin", {
+      const res = await fetch(`${apiUrl}/api/admin/createAdmin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

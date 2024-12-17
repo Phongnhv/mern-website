@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ReportListing from "../../components/ReportListing";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function Report() {
   const [reports, setReports] = useState([]);
@@ -19,7 +20,7 @@ export default function Report() {
   // Hàm gọi API để lấy report
   const fetchReports = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/getReports`);
+      const response = await fetch(`${apiUrl}/${API_BASE_URL}/getReports`);
       if (!response.ok) {
         throw new Error("Failed to fetch reports");
       }
@@ -38,7 +39,7 @@ export default function Report() {
   // Hàm gọi API để xóa report
   const deleteReport = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/deleteReport/${id}`, {
+      const response = await fetch(`${apiUrl}/${API_BASE_URL}/deleteReport/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {

@@ -16,7 +16,7 @@ import {
 } from 'react-icons/fa';
 import Contact from '../components/Contact';
 import MapComponent from "../components/MapComponent";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 export default function Listing() {
   SwiperCore.use([Navigation]);
   const [listing, setListing] = useState(null);

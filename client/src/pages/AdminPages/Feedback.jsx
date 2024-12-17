@@ -15,11 +15,12 @@ export default function Feedback() {
   const hasData = feedbacks.length > 0;
 
   const API_BASE_URL = "/api/admin";
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   // Hàm gọi API để lấy feedbacks
   const fetchFeedbacks = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/getFeedBacks`);
+      const response = await fetch(`${apiUrl}/${API_BASE_URL}/getFeedBacks`);
       if (!response.ok) {
         throw new Error("Failed to fetch feedbacks");
       }
@@ -38,7 +39,7 @@ export default function Feedback() {
   // Hàm gọi API để xóa feedback
   const deleteFeedback = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/deleteFeedBack/${id}`, {
+      const response = await fetch(`${apiUrl}${API_BASE_URL}/deleteFeedBack/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {

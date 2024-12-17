@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {PayPalScriptProvider, PayPalButtons} from "@paypal/react-paypal-js";
 import {useSelector} from "react-redux";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const PaypalCheckoutButton = (props) => {
     const {product,closePopup, onPurchase } = props;
     
@@ -28,8 +28,8 @@ const PaypalCheckoutButton = (props) => {
 
     const createOrder = async (orderData) => {
         try {
-          // Gửi yêu cầu POST đến API /api/user/createOrder
-          const response = await fetch('/api/user/createOrder', {
+          // Gửi yêu cầu POST đến API ${apiUrl}/api/user/createOrder
+          const response = await fetch(`${apiUrl}/api/user/createOrder`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json', // Xác định kiểu dữ liệu gửi đi là JSON

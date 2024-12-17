@@ -10,7 +10,7 @@ import {
 import { app } from '../../firebase';
 import { Link } from "react-router-dom";
 import { FaTasks ,FaPlusCircle, FaRegCreditCard, FaTrash, FaEdit, FaInfoCircle } from "react-icons/fa";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 export default function UserList() {
   const fileRef = useRef(null);
   const {currentUser, loading, error } = useSelector((state) => state.user);
@@ -61,7 +61,7 @@ export default function UserList() {
   const handleShowListings = async () => {
     try {
       setShowListingsError(false);
-      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const res = await fetch(`${apiUrl}/api/user/listings/${currentUser._id}`);
       const data = await res.json();
       if (data.success === false) {
         setShowListingsError(true);
@@ -83,7 +83,7 @@ export default function UserList() {
 
   const handleListingDelete = async (listingId) => {
     try {
-      const res = await fetch(`/api/listing/delete/${listingId}`, {
+      const res = await fetch(`${apiUrl}/api/listing/delete/${listingId}`, {
         method: 'DELETE',
       });
       const data = await res.json();

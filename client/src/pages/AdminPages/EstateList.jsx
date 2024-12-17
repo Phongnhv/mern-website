@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FaCheck, FaMinus, FaSearch, FaTrash } from "react-icons/fa";
 
 import { Link } from "react-router-dom";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function EstateList() {
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ export default function EstateList() {
       setListings([]);
       try {
         const res = await fetch(
-          `/api/admin/listings?page=${currentPage}&searchTerm=${searchTerm}`
+          `${apiUrl}/api/admin/listings?page=${currentPage}&searchTerm=${searchTerm}`
         );
         const data = await res.json();
         setListings(data.listings);
@@ -38,7 +39,7 @@ export default function EstateList() {
 
   const updateStatus = async (id, status) => {
     try {
-      const response = await fetch(`/api/admin/listings/status/${id}`, {
+      const response = await fetch(`${apiUrl}/api/admin/listings/status/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +67,7 @@ export default function EstateList() {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/admin/listings/delete/${id}`, {
+      const response = await fetch(`${apiUrl}/api/admin/listings/delete/${id}`, {
         method: "DELETE",
       });
 

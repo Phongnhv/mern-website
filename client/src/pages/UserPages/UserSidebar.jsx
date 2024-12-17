@@ -7,6 +7,7 @@ import {
   signOutUserSuccess,
   signOutUserFailure,
 } from "../../redux/user/userSlice";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 import { FaUserCircle, FaTasks , FaShoppingCart ,FaToolbox ,FaSignOutAlt  } from "react-icons/fa";
 
@@ -19,7 +20,7 @@ const UserSidebar = () => {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch("/api/auth/signout");
+      const res = await fetch(`${apiUrl}/api/auth/signout`);
       const data = await res.json();
       if (data.success === false) {
         dispatch(signOutUserFailure(data.message));

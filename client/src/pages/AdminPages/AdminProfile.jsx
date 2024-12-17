@@ -16,6 +16,7 @@ import {
 } from 'firebase/storage';
 import { app } from '../../firebase';
 import { FaSignOutAlt, FaTrash } from "react-icons/fa";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -62,7 +63,7 @@ export default function Profile() {
     e.preventDefault();
     try {
       dispatch(updateUserStart());
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`${apiUrl}/api/user/update/${currentUser._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
