@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaBan, FaSearch, FaTrash } from "react-icons/fa";
+import { FaUserAltSlash, FaUserCheck } from "react-icons/fa";
 
 function UsersList() {
   const [loading, setLoading] = useState(false);
@@ -7,15 +8,18 @@ function UsersList() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const postsPerPage = 5;
+  const postsPerPage = 10;
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch(`/api/admin/users?page=${currentPage}`);
-        const data = await res.json();
-        setUsers(data.users);
-        setTotalUsers(data.totalUsers);
+
+        const response = await fetch(
+          `/api/admin/users?page=${currentPage}&searchTerm=${searchTerm}`
+        );
+        const result = await response.json();
+        setUsers(result.users);
+        setTotalUsers(result.totalUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
       } finally {
@@ -24,7 +28,54 @@ function UsersList() {
     };
 
     fetchUsers();
-  }, [currentPage]);
+  }, [currentPage, searchTerm]);
+
+  const updateStatus = async (id, status) => {
+    try {
+      const response = await fetch(`/api/admin/users/ban/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log("Update successful:", result.data);
+
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user._id === id ? { ...user, status } : user
+          )
+        );
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error toggling ban status:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/admin/users/delete/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        console.log("User deleted successfully");
+        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
+        setTotalUsers((prevTotal) => prevTotal - 1);
+      } else {
+        const result = await response.json();
+        console.error("Delete failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
 
   const totalPages = Math.ceil(totalUsers / postsPerPage);
 
@@ -69,8 +120,10 @@ function UsersList() {
                   <th className="p-2 border border-gray-300 w-7">ID</th>
                   <th className="p-2 border border-gray-300">Username</th>
                   <th className="p-2 border border-gray-300">Email</th>
-                  <th className="p-2 border border-gray-300 w-7">Ban</th>
-                  <th className="p-2 border border-gray-300 w-7">Delete</th>
+
+
+                  <th className="p-2 border border-gray-300">Status</th>
+                  <th className="p-2 border border-gray-300 w-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -86,21 +139,43 @@ function UsersList() {
                       <td className="p-2 border border-gray-300">
                         {user.email}
                       </td>
-                      <td className="p-2 border border-gray-300 text-center">
-                        <button
-                          type="button"
-                          className="border rounded-lg p-1 border-gray-300  hover:border-red-600 hover:bg-red-300 "
-                        >
-                          <FaBan className="text-red-600 hover:text-white" />
-                        </button>
+
+                      <td className="p-2 border border-gray-300">
+                        {user.isBanned ? "Banned" : "Active"}
                       </td>
-                      <td className="p-2 border border-gray-300 text-center">
-                        <button
-                          type="button"
-                          className="border rounded-lg p-1 border-gray-300"
-                        >
-                          <FaTrash className="text-gray-600" />
-                        </button>
+                      <td className="text-white border border-gray-300">
+                        <div className="flex justify-around">
+                          {user.isBanned && (
+                            <button
+                              className="flex items-center border rounded-lg bg-green-600 gap-2 p-1 m-1"
+                              onClick={() =>
+                                updateStatus(user._id, !user.isBanned)
+                              }
+                            >
+                              Unban
+                              <FaUserCheck className="translate-y-[25%]" />
+                            </button>
+                          )}
+                          {!user.isBanned && (
+                            <button
+                              className="flex items-center border rounded-lg bg-red-600 gap-2 p-1 m-1"
+                              onClick={() =>
+                                updateStatus(user._id, !user.isBanned)
+                              }
+                            >
+                              Ban
+                              <FaUserAltSlash />
+                            </button>
+                          )}
+                          <button
+                            value="Delete"
+                            className="flex border rounded-lg bg-gray-600 gap-2 p-1 m-1"
+                            onClick={() => handleDelete(user._id)}
+                          >
+                            Delete
+                            <FaTrash className="translate-y-[25%]" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))

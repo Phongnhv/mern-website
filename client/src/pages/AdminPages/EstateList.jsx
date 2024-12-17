@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { FaSearch, FaTrash } from "react-icons/fa";
+
+import { FaCheck, FaMinus, FaSearch, FaTrash } from "react-icons/fa";
+
 import { Link } from "react-router-dom";
 
 export default function EstateList() {
@@ -8,14 +10,19 @@ export default function EstateList() {
   const [listings, setListings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const postsPerPage = 8;
+
+
+  const postsPerPage = 10;
+
 
   useEffect(() => {
     const fetchListings = async () => {
       setLoading(true);
       setListings([]);
       try {
-        const res = await fetch(`/api/admin/listings?page=${currentPage}`);
+        const res = await fetch(
+          `/api/admin/listings?page=${currentPage}&searchTerm=${searchTerm}`
+        );
         const data = await res.json();
         setListings(data.listings);
         setTotalListings(data.totalListing);
@@ -27,7 +34,56 @@ export default function EstateList() {
     };
 
     fetchListings();
-  }, [currentPage]);
+  }, [currentPage, searchTerm]);
+
+  const updateStatus = async (id, status) => {
+    try {
+      const response = await fetch(`/api/admin/listings/status/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        console.log("Update successful:", result.data);
+
+        setListings((prevListings) =>
+          prevListings.map((listing) =>
+            listing._id === id ? { ...listing, status } : listing
+          )
+        );
+      } else {
+        console.error("Update failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/admin/listings/delete/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        console.log("Listing deleted successfully");
+        setListings((prevListings) =>
+          prevListings.filter((listing) => listing._id !== id)
+        );
+        setTotalListings((prevTotal) => prevTotal - 1);
+      } else {
+        const result = await response.json();
+        console.error("Delete failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Error deleting listing:", error);
+    }
+  };
 
   const handleStatusChange = async () => {};
 
@@ -61,8 +117,9 @@ export default function EstateList() {
           </button>
         </form>
       </div>
-      <div className="px-4 gap-2">
-        {!loading && listings.length === 0 && (
+
+      <div className="p-4 gap-2">
+        {!loading && totalListings === 0 && (
           <p className="text-xl text-slate-700">No listing found!</p>
         )}
         {loading && (
@@ -77,15 +134,17 @@ export default function EstateList() {
               <thead className="bg-gray-200 border-b border-gray-300">
                 <tr>
                   <th className="p-2 border border-gray-300 w-7">ID</th>
-                  <th className="p-2 border border-gray-300 text-left">Name</th>
-                  <th className="p-2 border border-gray-300 text-left">Address</th>
-                  <th className="p-2 border border-gray-300 w-7">Type</th>
-                  <th className="p-2 border border-gray-300 w-7">Offer</th>
-                  <th className="p-2 border border-gray-300 w-7">Furnished</th>
-                  <th className="p-2 border border-gray-300 w-7">Parking</th>
-                  <th className="p-2 border border-gray-300 w-7">Status</th>
-                  <th className="p-2 border border-gray-300 w-7">Details</th>
-                  <th className="p-2 border border-gray-300 w-7">Delete</th>
+
+
+                  <th className="p-2 border border-gray-300">Name</th>
+                  <th className="p-2 border border-gray-300">Address</th>
+                  <th className="p-2 border border-gray-300">Price</th>
+                  <th className="p-2 border border-gray-300">
+                    Landlord's Email
+                  </th>
+                  <th className="p-2 border border-gray-300">Type</th>
+                  <th className="p-2 border border-gray-300">Status</th>
+                  <th className="p-2 border border-gray-300 w-2">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -94,56 +153,61 @@ export default function EstateList() {
                     <td className="p-2 border border-gray-300">
                       {index + 1 + (currentPage - 1) * postsPerPage}
                     </td>
-                    <td className="p-2 border border-gray-300 text-left">
-                      {listing.name}
+
+                    <td className="p-2 border border-gray-300">
+                      <Link to={`/listing/${listing._id}`}>{listing.name}</Link>
                     </td>
-                    <td className="p-2 border border-gray-300 text-left">
+                    <td className="p-2 border border-gray-300">
                       {listing.address || "N/A"}
                     </td>
                     <td className="p-2 border border-gray-300">
-                      {listing.type == "rent" ? "Rent" : "Sale"}
+                      {listing.regularPrice - listing.discountPrice}
                     </td>
                     <td className="p-2 border border-gray-300">
-                      {listing.offer ? "Yes" : "No"}
+                      {listing.userRef?.email || "N/A"}
                     </td>
                     <td className="p-2 border border-gray-300">
-                      {listing.furnished ? "Yes" : "No"}
+                      {listing.isPremium ? "Premium" : "Normal"}
                     </td>
                     <td className="p-2 border border-gray-300">
-                      {listing.parking ? "Yes" : "No"}
+                      {listing.status}
                     </td>
-                    <td className="p-2 border border-gray-300">
-                      <select
-                        value={listing.status}
-                        onChange={(e) =>
-                          handleStatusChange(listing.email, e.target.value)
-                        }
-                        className="border rounded px-2 py-1"
-                        defaultValue={listing.status}
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="accepted" className="text-green-600">
-                          Accepted
-                        </option>
-                        <option value="denied" className="text-red-600">
-                          Denied
-                        </option>
-                      </select>
-                    </td>
-                    <td className="p-2 border border-gray-300">
-                      <Link to={`/listing/${listing._id}`}>
-                        <p className="text-blue-600 hover:opacity-50 underline">
-                          View
-                        </p>
-                      </Link>
-                    </td>
-                    <td className="p-2 border border-gray-300">
-                      <button
-                        type="button"
-                        className="border rounded-lg p-1 border-gray-300 "
-                      >
-                        <FaTrash className="text-gray-600 hover:opacity-50" />
-                      </button>
+                    <td className="text-white border border-gray-300">
+                      <div className="flex justify-around">
+                        {(listing.status === "Pending" ||
+                          listing.status === "Rejected") && (
+                          <button
+                            className="flex border rounded-lg bg-green-600 gap-2 p-1 m-1"
+                            onClick={() =>
+                              updateStatus(listing._id, "Approved")
+                            }
+                          >
+                            Accept
+                            <FaCheck className="translate-y-[25%]" />
+                          </button>
+                        )}
+
+                        {(listing.status === "Pending" ||
+                          listing.status === "Approved") && (
+                          <button
+                            className="flex border rounded-lg bg-red-600 gap-2 p-1 m-1"
+                            onClick={(e) => {
+                              updateStatus(listing._id, "Rejected");
+                            }}
+                          >
+                            Deny
+                            <FaMinus className="translate-y-[25%]" />
+                          </button>
+                        )}
+
+                        <button
+                          className="flex border rounded-lg bg-gray-600 gap-2 p-1 m-1"
+                          onClick={() => handleDelete(listing._id)}
+                        >
+                          Delete
+                          <FaTrash className="translate-y-[25%]" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

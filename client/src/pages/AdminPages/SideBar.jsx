@@ -9,13 +9,12 @@ import {
 import { ChevronLast, ChevronFirst } from "lucide-react";
 import { VscFeedback } from "react-icons/vsc";
 import { TbReport } from "react-icons/tb";
-import {
-  FaBuilding,
-  FaHome,
-  FaSignOutAlt,
-  FaUsers,
-} from "react-icons/fa";
+
 import { ImProfile } from "react-icons/im";
+
+
+import { IoPersonAddSharp } from "react-icons/io5";
+import { FaBuilding, FaHome, FaSignOutAlt, FaUsers } from "react-icons/fa";
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);
@@ -63,9 +62,9 @@ const Sidebar = () => {
     </li>
   );
 
-  return (
-    <aside className="h-[90vh]">
-      <nav className=" h-[90vh] flex flex-col bg-gray-800 text-white shadow-sm">
+  return ( 
+    <aside className="min-h-screen overflow-y-auto flex flex-col">
+      <nav className="min-h-screen bg-gray-800 text-white shadow-sm">
         {/* Header Section */}
         <div className="p-4 pb-2 flex justify-between items-center">
           <span
@@ -86,7 +85,7 @@ const Sidebar = () => {
 
         {/* Sidebar Items */}
         <ul className="flex-1 px-3">
-          <SidebarItem icon={<FaHome />} text="Home" to="/admin" />
+          <SidebarItem icon={<FaHome />} text="Home" to="/admin/homepage" />
           <SidebarItem
             icon={<FaUsers />}
             text="Users Management"
@@ -108,6 +107,12 @@ const Sidebar = () => {
             text="Setting"
             to="/admin/profile"
           />
+          <SidebarItem
+            icon={<IoPersonAddSharp />}
+            text="Add new Admin"
+            to="/admin/new-admin"
+          />
+          
           <li
             className="relative flex items-center py-2 px-3 my-1
             font-medium rounded-md 

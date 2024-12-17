@@ -2,33 +2,48 @@ import express from "express";
 
 import {
   fetchUser,
-  fetchListing,
-  createAdmin,
-  getUserStatisticsByDate,
-  getReports,
-  getFeedBacks,
-  deleteReport,
-  deleteFeedBack,
-  getListingStatisticsByDate,
-  banUser,
-  update
+fetchListing,
+createAdmin,
+getUserStatisticsByDate,
+getReports,
+getFeedBacks,
+deleteReport,
+deleteFeedBack,
+getListingStatisticsByDate,
+banUser,
+update,
+updateListingStatus,
+deleteUser,
+deleteListing
 } from "../controllers/admin.controller.js";
 
 const router = express.Router();
 
 router.get("/users", fetchUser);
-router.get("/listings", fetchListing);
 
-router.post("/createAdmin", createAdmin);
-router.get("/getUserStatisticsByDate", getUserStatisticsByDate);
-router.get("/getListingStatisticsByDate",getListingStatisticsByDate)
-router.get("/getReports", getReports);
-router.get("/getFeedBacks", getFeedBacks);
-router.delete("/deleteReport/:id",deleteReport)
-router.delete("/deleteFeedBack/:id", deleteFeedBack);
 
-router.post("/banUser/:id", banUser);
+
+
+
+
+
+
+
 router.post("/update", update);
- 
+
+router.get("/users/stats", getUserStatisticsByDate);
+
+router.put("/users/ban/:id", banUser);
+router.delete("/users/delete/:id", deleteUser);
+router.get("/listings", fetchListing);
+router.get("/listings/stats", getListingStatisticsByDate);
+router.put("/listings/status/:id", updateListingStatus);
+router.delete("/listings/delete/:id", deleteListing);
+router.get("/getFeedBacks", getFeedBacks);
+router.post('/createAdmin', createAdmin)
+router.delete("/deleteFeedBack/:id", deleteFeedBack);
+router.get("/getReports", getReports);
+router.delete("/deleteReport/:id", deleteReport);
+
 export default router;
 

@@ -5,57 +5,65 @@ export default function Report() {
   const [reports, setReports] = useState([]);
   const [selected, setSelected] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  useEffect(() => {
-    fetch("/api/admin/getReports")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Fetched reports:", data);
-
-        const defaultReports = data.data.map((report) => ({
-          id: report._id,
-          username: report.reportedBy.username,
-          estateLink: report.reportedListing.title,
-          estateUrl: `/listing/${report.reportedListing._id}`,
-          reportIssue: report.content,
-        }));
-        setReports(defaultReports);
-      })
-      .catch((error) => console.error("Error fetching reports:", error));
-  }, []);
-
+  const itemsPerPage = 2;
   const totalPages = Math.ceil(reports.length / itemsPerPage);
-
-  const handleDelete = () => {
-    if (selected) {
-      console.log("Deleting report with ID:", selected.id);
-
-      fetch(`/api/deleteReport/${selected.id}`, {
-        method: "DELETE",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Handle success
-          if (data.message === "Xóa report thành công.") {
-            setReports(reports.filter((report) => report.id !== selected.id));
-            setSelected(null);
-          } else {
-            alert("Error deleting report: " + data.message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error deleting report:", error);
-        });
-    }
-  };
-
   const currentReports = reports.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
   const hasData = reports.length > 0;
+
+  const API_BASE_URL = "/api/admin";
+
+  // Hàm gọi API để lấy report
+  const fetchReports = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/getReports`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch reports");
+      }
+      const data = await response.json();
+      console.log(data);
+      setReports(data.data);
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchReports();
+  }, []);
+
+  // Hàm gọi API để xóa report
+  const deleteReport = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/deleteReport/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete report");
+      }
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {
+      console.error("Error deleting report:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selected) {
+      try {
+        await deleteReport(selected._id);
+        setReports((prevReports) =>
+          prevReports.filter((report) => report._id !== selected._id)
+        );
+        setSelected(null);
+      } catch (error) {
+        console.error("Failed to delete report:", error);
+      }
+    }
+  };
 
   return (
     <div className="h-full">
@@ -65,7 +73,7 @@ export default function Report() {
         </h1>
         <button
           className={`${
-            selected ? "bg-red-700 hover:bg-red-800" : "bg-red-800"
+            selected ? "bg-red-700 hover:bg-red-800" : "bg-gray-800"
           } text-white rounded-lg uppercase p-3`}
           disabled={!selected}
           onClick={handleDelete}

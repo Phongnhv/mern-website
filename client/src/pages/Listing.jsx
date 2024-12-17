@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { useSelector } from 'react-redux';
@@ -143,9 +143,14 @@ export default function Listing() {
               </button>
             )}
             {contact && <Contact listing={listing}/>}
-            <div >
-            <button className="flex items-center rounded-lg hover:bg-red-400 p-3 gap-2 "> <FaExclamationCircle/> Report</button>
-            </div>
+            <Link to={`/report/${params.listingId}`}>
+              <div>
+                <button className="flex items-center rounded-lg hover:bg-red-400 p-3 gap-2 ">
+                  {" "}
+                  <FaExclamationCircle /> Report
+                </button>
+              </div>
+            </Link>
           </div>
           
         </div>

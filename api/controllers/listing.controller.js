@@ -90,18 +90,25 @@ export const getListings = async (req, res, next) => {
     const order = req.query.order || "desc";
     const status = req.query.status || "Approved";
 
-    //const minArea = parseInt(req.query.minArea) || 0;
-    //const maxArea = parseInt(req.query.maxArea) || Number.MAX_SAFE_INTEGER;
+    const minPrice = parseInt(req.query.minPrice) || 0;
+    const maxPrice = parseInt(req.query.maxPrice) || Number.MAX_SAFE_INTEGER;
 
     const listings = await Listing.find({
-      name: { $regex: searchTerm, $options: "i" },
+      $or: [
+        { regularPrice: { $gte: minPrice, $lte: maxPrice } },
+        { discountPrice: { $gte: minPrice, $lte: maxPrice } },
+      ],
+      $or: [
+        { address: { $regex: searchTerm, $options: "i" } },
+        { name: { $regex: searchTerm, $options: "i" } },
+      ],
       offer,
       furnished,
       parking,
       type,
       status
     })
-      .sort({ [sort]: order })
+      .sort({ [sort]: order, isPremium: -1 })
       .limit(limit)
       .skip(startIndex);
 
