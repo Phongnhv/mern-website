@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'https://mern-website-h1mk.vercel.app',  // Đặt domain frontend của bạn ở đây
+  origin: 'https://hust-cv-phong-20210669.id.vn',  // Đặt domain frontend của bạn ở đây
   credentials: true  // Cho phép gửi cookies và thông tin xác thực
 }));
  
